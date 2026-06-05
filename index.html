@@ -125,12 +125,13 @@
             width: 250px; height: 250px;
             border-radius: 50%;
             border: 3px solid rgba(255,255,255,0.8);
-            box-shadow: 0 0 0 6px rgba(255,255,255,0.15), 0 8px 30px rgba(0,0,0,0.25);
             overflow: hidden;
             background: rgba(255,255,255,0.15);
             display: flex; align-items: center; justify-content: center;
-            margin-bottom: 16px;
-            animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+            margin-bottom: 0;
+            animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both, lelegzes 4s ease-in-out 1s infinite;
+            position: relative;
+            z-index: 1;
         }
 
         .profil-kep {
@@ -379,6 +380,97 @@
             pointer-events: none;
             animation: ripple 0.5s ease-out forwards;
         }
+
+        /* ======= PROFIL ANIMÁCIÓ ======= */
+        .profil-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        /* Pulzáló ping gyűrűk */
+        .ping-gyuru {
+            position: absolute;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255,255,255,0.4);
+            animation: ping 3.5s ease-out infinite;
+            pointer-events: none;
+            width: 264px; height: 264px;
+        }
+        .ping-gyuru:nth-child(1) { animation-delay: 0s; }
+        .ping-gyuru:nth-child(2) { animation-delay: 1.15s; }
+        .ping-gyuru:nth-child(3) { animation-delay: 2.3s; }
+
+        @keyframes ping {
+            0%   { transform: scale(1);   opacity: 0.55; }
+            100% { transform: scale(1.9); opacity: 0; }
+        }
+
+        /* Két orbit gyűrű */
+        .orbit-gyuru {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px dashed rgba(255,255,255,0.22);
+            pointer-events: none;
+        }
+        .orbit-gyuru.bels {
+            width: 298px; height: 298px;
+            animation: forog 16s linear infinite;
+        }
+        .orbit-gyuru.kulso {
+            width: 360px; height: 360px;
+            animation: forog 26s linear infinite reverse;
+            border-style: dotted;
+            border-color: rgba(255,255,255,0.13);
+        }
+
+        @keyframes forog {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        .orbit-dot {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(13,106,150,0.75);
+            border: 1px solid rgba(255,255,255,0.35);
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .orbit-dot.nagy { width: 36px; height: 36px; }
+        .orbit-dot.kicsi { width: 26px; height: 26px; }
+        .orbit-dot svg { fill: none; stroke: rgba(255,255,255,0.9); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .orbit-dot.nagy svg { width: 18px; height: 18px; }
+        .orbit-dot.kicsi svg { width: 13px; height: 13px; }
+
+        .orbit-gyuru.bels .orbit-dot  { animation: ellenforog 16s linear infinite; }
+        .orbit-gyuru.kulso .orbit-dot { animation: ellenforog 26s linear infinite reverse; }
+
+        @keyframes ellenforog {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(-360deg); }
+        }
+
+        /* Belső orbit – 4 dot */
+        .orbit-gyuru.bels .orbit-dot:nth-child(1) { top: calc(50% - 18px); left: -18px; }
+        .orbit-gyuru.bels .orbit-dot:nth-child(2) { top: -18px; left: calc(50% - 18px); }
+        .orbit-gyuru.bels .orbit-dot:nth-child(3) { top: calc(50% - 18px); right: -18px; }
+        .orbit-gyuru.bels .orbit-dot:nth-child(4) { bottom: -18px; left: calc(50% - 18px); }
+
+        /* Külső orbit – 5 dot */
+        .orbit-gyuru.kulso .orbit-dot:nth-child(1) { top: calc(50% - 13px); left: -13px; }
+        .orbit-gyuru.kulso .orbit-dot:nth-child(2) { top: 4%; left: 8%; }
+        .orbit-gyuru.kulso .orbit-dot:nth-child(3) { top: 4%; right: 8%; }
+        .orbit-gyuru.kulso .orbit-dot:nth-child(4) { bottom: 11%; left: 1%; }
+        .orbit-gyuru.kulso .orbit-dot:nth-child(5) { bottom: 11%; right: 1%; }
+
+        /* Lélegző fény */
+        @keyframes lelegzes {
+            0%, 100% { box-shadow: 0 0 0 6px rgba(255,255,255,0.12), 0 0 30px rgba(38,168,224,0.25), 0 8px 30px rgba(0,0,0,0.25); }
+            50%       { box-shadow: 0 0 0 9px rgba(255,255,255,0.22), 0 0 55px rgba(38,168,224,0.5),  0 8px 30px rgba(0,0,0,0.25); }
+        }
     </style>
 </head>
 <body id="top">
@@ -386,7 +478,49 @@
 
     <!-- PROFIL -->
     <section class="profil-szekció">
-        <div class="profil-keret" id="profilKeret"></div>
+        <div class="profil-wrapper">
+            <!-- Pulzáló gyűrűk -->
+            <div class="ping-gyuru"></div>
+            <div class="ping-gyuru"></div>
+            <div class="ping-gyuru"></div>
+
+            <!-- Belső orbit – 4 ikon -->
+            <div class="orbit-gyuru bels">
+                <div class="orbit-dot nagy">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M1.5 8.5a17 17 0 0 1 21 0M5 12a13 13 0 0 1 14 0M8.5 15.5a8 8 0 0 1 7 0M12 19h.01"/></svg>
+                </div>
+                <div class="orbit-dot nagy">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg>
+                </div>
+                <div class="orbit-dot nagy">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <div class="orbit-dot nagy">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+                </div>
+            </div>
+
+            <!-- Külső orbit – 5 kisebb ikon, ellentétes irány -->
+            <div class="orbit-gyuru kulso">
+                <div class="orbit-dot kicsi">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                </div>
+                <div class="orbit-dot kicsi">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <div class="orbit-dot kicsi">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                </div>
+                <div class="orbit-dot kicsi">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <div class="orbit-dot kicsi">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </div>
+            </div>
+
+            <div class="profil-keret" id="profilKeret"></div>
+        </div>
         <h1 class="nev" id="nevEl"></h1>
         <p class="beosztas" id="beosztasEl"></p>
 
