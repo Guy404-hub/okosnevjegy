@@ -55,6 +55,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            perspective: 1000px; /* Szükséges a 3D dőlési hatáshoz */
+            overflow-x: hidden;
         }
         a { text-decoration: none; -webkit-tap-highlight-color: transparent; color: inherit; }
 
@@ -70,7 +72,9 @@
             padding-bottom: 30px;
             position: relative;
             overflow: hidden;
-            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d; /* Biztosítja, hogy a belső elemek is 3D-ben reagáljanak */
+            will-change: transform;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* Lágy visszaállás, amikor elhagyja az egér */
         }
 
         /* ======= PROFIL SZEKCIÓ ======= */
@@ -81,7 +85,7 @@
             align-items: center;
             padding-top: 50px;
             padding-bottom: 24px;
-            animation: fadeDown 0.7s ease both;
+            animation: fadeDown 0.8s cubic-bezier(0.25, 1, 0.5, 1) both;
         }
 
         .profil-wrapper {
@@ -228,7 +232,10 @@
             cursor: pointer;
             border: none;
             transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-            animation: fadeUp 0.6s ease 0.4s both, mentes-pulzal 2.5s ease-in-out 1s infinite, mentes-shimmer 3s linear 1s infinite, lebeg 3s ease-in-out 0.2s infinite;
+            animation: fadeUp 0.7s cubic-bezier(0.25, 1, 0.5, 1) 0.2s both, 
+                       mentes-pulzal 2.5s ease-in-out 1s infinite, 
+                       mentes-shimmer 3s linear 1s infinite, 
+                       lebeg 3s ease-in-out 0.9s infinite;
         }
         .mentes-gomb svg { width: 20px; height: 20px; stroke: #0d6a96; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s; flex-shrink: 0; }
         
@@ -255,6 +262,7 @@
             height: 1px;
             background: rgba(255,255,255,0.2);
             margin: 20px 0 4px;
+            animation: fadeUp 0.8s ease 0.3s both;
         }
 
         /* ======= FŐ GOMBOK ======= */
@@ -264,7 +272,6 @@
             gap: 10px;
             width: 90%;
             margin-top: 16px;
-            animation: fadeUp 0.6s ease 0.5s both;
         }
         .fo-gomb {
             position: relative;     
@@ -286,20 +293,17 @@
             transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            animation: lebeg 3s ease-in-out infinite;
+            animation: fadeUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) both;
         }
         .fo-gomb svg { width: 28px; height: 28px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s; }
-        .fo-gomb:nth-child(1) { animation-delay: 0s; }
-        .fo-gomb:nth-child(2) { animation-delay: 0.4s; }
-        .fo-gomb:nth-child(3) { animation-delay: 0.8s; }
         
-        /* ÚJ: FŐ GOMBOK HOVER KEZELÉSE */
+        /* FŐ GOMBOK HOVER KEZELÉSE */
         @media (hover: hover) {
             .fo-gomb:hover {
-                animation-play-state: paused; /* Megállítja a lebegést a jelenlegi ponton */
+                animation-play-state: paused;
                 background: rgba(255,255,255,0.25);
                 border-color: rgba(255,255,255,0.4);
-                transform: translateY(-5px) scale(1.02); /* Kicsit felemelkedik */
+                transform: translateY(-5px) scale(1.02);
                 box-shadow: 0 6px 15px rgba(0,0,0,0.15);
             }
             .fo-gomb:hover svg {
@@ -323,7 +327,6 @@
             gap: 8px;
             width: 90%;
             margin-top: 10px;
-            animation: fadeUp 0.6s ease 0.65s both;
         }
         .koz-gomb {
             position: relative;     
@@ -345,13 +348,11 @@
             transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            animation: lebeg 3.5s ease-in-out infinite;
+            animation: fadeUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) both;
         }
         .koz-gomb svg { width: 22px; height: 22px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        .koz-gomb:nth-child(1) { animation-delay: 0.2s; }
-        .koz-gomb:nth-child(2) { animation-delay: 0.7s; }
         
-        /* ÚJ: KÖZÖSSÉGI GOMBOK HOVER KEZELÉSE */
+        /* KÖZÖSSÉGI GOMBOK HOVER KEZELÉSE */
         @media (hover: hover) {
             .koz-gomb:hover {
                 animation-play-state: paused;
@@ -368,6 +369,7 @@
         .top-gomb {
             margin-top: 28px;
             display: flex; align-items: center; justify-content: center;
+            animation: fadeUp 0.8s ease 0.8s both;
         }
         .top-gomb svg { width: 34px; height: 34px; stroke: rgba(255,255,255,0.4); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.2s, transform 0.2s; }
         @media (hover: hover) {
@@ -411,8 +413,8 @@
         .kiemelt { color: #a8dff5; font-weight: 800; }
 
         /* ======= ANIMÁCIÓK ======= */
-        @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes popIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
         @keyframes lebeg { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
 
@@ -606,6 +608,9 @@ const foGombokEl = document.getElementById('foGombok');
 const kozossegiEl = document.getElementById('kozossegi');
 const foGombTipusok = ['telefon', 'sms', 'email', 'website', 'iskola'];
 
+let foGombIndex = 0;
+let kozGombIndex = 0;
+
 Object.keys(CARD).forEach(kulcs => {
     if (!CARD[kulcs] || kulcs === 'nev' || kulcs === 'beosztas' || kulcs === 'vcfFajl' || kulcs === 'profilkep' || kulcs.startsWith('ceg') || kulcs === 'foSzin') return;
 
@@ -625,14 +630,38 @@ Object.keys(CARD).forEach(kulcs => {
         a.href = href;
         if (kulcs === 'website' || kulcs === 'iskola') a.target = '_blank';
         a.innerHTML = gombHtml;
+        
+        const delay = 0.4 + (foGombIndex * 0.12);
+        a.style.animationDelay = `${delay}s`;
+        
+        setTimeout(() => {
+            if(!a.classList.contains('touch')) {
+                a.style.animation = `lebeg 3s ease-in-out infinite`;
+                a.style.animationDelay = `${foGombIndex * 0.4}s`; 
+            }
+        }, (delay + 0.6) * 1000);
+
         foGombokEl.appendChild(a);
+        foGombIndex++;
     } else {
         const a = document.createElement('a');
         a.className = 'koz-gomb';
         a.href = href;
         a.target = '_blank';
         a.innerHTML = gombHtml;
+        
+        const delay = 0.6 + (kozGombIndex * 0.1);
+        a.style.animationDelay = `${delay}s`;
+        
+        setTimeout(() => {
+            if(!a.classList.contains('touch')) {
+                a.style.animation = `lebeg 3.5s ease-in-out infinite`;
+                a.style.animationDelay = `${kozGombIndex * 0.3}s`;
+            }
+        }, (delay + 0.6) * 1000);
+
         kozossegiEl.appendChild(a);
+        kozGombIndex++;
     }
 });
 
@@ -652,6 +681,39 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
     el.addEventListener('touchstart', () => { el.classList.add('touch'); }, {passive: true});
     el.addEventListener('touchend', () => { el.classList.remove('touch'); }, {passive: true});
 });
+
+/* ======= ÚJ: EGÉRKÖVETŐ 3D PARALLAXIS ======= */
+const cardElement = document.getElementById('mainCard');
+
+// Csak asztali gépeken fusson, ahol van hover lehetőség (egér)
+if (window.matchMedia("(hover: hover)").matches) {
+    cardElement.addEventListener('mousemove', (e) => {
+        const cardRect = cardElement.getBoundingClientRect();
+        
+        // Egér pozíciója a kártyán belül (százalékosan a középponthoz képest)
+        const x = e.clientX - cardRect.left;
+        const y = e.clientY - cardRect.top;
+        
+        const midX = cardRect.width / 2;
+        const midY = cardRect.height / 2;
+        
+        // Maximális dőlésszög (fokban mérve, a 6-8 fok az ideális, ami nem túl agresszív)
+        const maxRotate = 8; 
+        
+        const rotateX = ((midY - y) / midY) * maxRotate;
+        const rotateY = ((x - midX) / midX) * maxRotate;
+        
+        // Mozgás közben kivesszük a transition-t a teljesen azonnali reakcióért
+        cardElement.style.transition = 'transform 0.1s ease-out';
+        cardElement.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    // Ha az egér elhagyja a kártyát, lágyan visszaáll a helyére
+    cardElement.addEventListener('mouseleave', () => {
+        cardElement.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+        cardElement.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    });
+}
 </script>
 </body>
 </html>
