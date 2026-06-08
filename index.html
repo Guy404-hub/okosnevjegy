@@ -21,7 +21,7 @@
         sms:        "+36703672008",
         
         email:      "bartacsanad2@gmail.com",
-        messenger:  "https://www.facebook.com/profile.php?id=61551043671795",
+        
 
         facebook:   "https://www.facebook.com/profile.php?id=61551043671795",
         instagram:  "",
@@ -471,6 +471,42 @@
             0%, 100% { box-shadow: 0 0 0 6px rgba(255,255,255,0.12), 0 0 30px rgba(38,168,224,0.25), 0 8px 30px rgba(0,0,0,0.25); }
             50%       { box-shadow: 0 0 0 9px rgba(255,255,255,0.22), 0 0 55px rgba(38,168,224,0.5),  0 8px 30px rgba(0,0,0,0.25); }
         }
+
+        /* ======= SHIMMER SCAN ======= */
+        .profil-keret {
+            position: relative;
+            overflow: hidden;
+        }
+        .profil-keret::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -75%;
+            width: 50%;
+            height: 300%;
+            background: linear-gradient(
+                105deg,
+                transparent 30%,
+                rgba(255,255,255,0.18) 50%,
+                rgba(255,255,255,0.35) 55%,
+                rgba(255,255,255,0.18) 60%,
+                transparent 70%
+            );
+            animation: shimmer 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+        @keyframes shimmer {
+            0%   { left: -75%; top: -100%; }
+            100% { left: 150%; top: 100%; }
+        }
+
+        /* ======= GYROSCOPE TILT ======= */
+        .card {
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
     </style>
 </head>
 <body id="top">
@@ -698,6 +734,34 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
     el.addEventListener('touchstart', () => el.classList.add('touch'), { passive: true });
     el.addEventListener('touchend',   () => setTimeout(() => el.classList.remove('touch'), 300), { passive: true });
 });
+
+// ======= GYROSCOPE TILT =======
+(function() {
+    const card = document.querySelector('.card');
+    const MAX = 8; // max fokos dőlés
+
+    // Mobilon: gyroscope
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', function(e) {
+            if (e.gamma === null) return;
+            const x = Math.max(-MAX, Math.min(MAX, e.beta  * 0.15));
+            const y = Math.max(-MAX, Math.min(MAX, e.gamma * 0.15));
+            card.style.transform = `perspective(800px) rotateX(${-x}deg) rotateY(${y}deg)`;
+        }, true);
+    }
+
+    // Asztali: egér követés
+    window.addEventListener('mousemove', function(e) {
+        const cx = window.innerWidth  / 2;
+        const cy = window.innerHeight / 2;
+        const x = ((e.clientY - cy) / cy) * MAX;
+        const y = ((e.clientX - cx) / cx) * MAX;
+        card.style.transform = `perspective(800px) rotateX(${-x}deg) rotateY(${y}deg)`;
+    });
+    window.addEventListener('mouseleave', function() {
+        card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
+    });
+})();
 </script>
 </body>
 </html>
