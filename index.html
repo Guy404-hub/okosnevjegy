@@ -686,6 +686,35 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
     el.addEventListener('touchstart', () => { el.classList.add('touch'); }, {passive: true});
     el.addEventListener('touchend', () => { el.classList.remove('touch'); }, {passive: true});
 });
+// ======= EGÉR KÖVETÉS + GYROSCOPE TILT =======
+(function() {
+    const card = document.getElementById('mainCard');
+    const MAX = 8;
+
+    // Mobilon gyroscope
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', function(e) {
+            if (e.gamma === null) return;
+            const x = Math.max(-MAX, Math.min(MAX, e.beta  * 0.15));
+            const y = Math.max(-MAX, Math.min(MAX, e.gamma * 0.15));
+            card.style.transform = `perspective(800px) rotateX(${-x}deg) rotateY(${y}deg)`;
+        }, true);
+    }
+
+    // Asztali egér követés
+    window.addEventListener('mousemove', function(e) {
+        if (flipContainer.contains(e.target)) return;
+        const cx = window.innerWidth  / 2;
+        const cy = window.innerHeight / 2;
+        const x = ((e.clientY - cy) / cy) * MAX;
+        const y = ((e.clientX - cx) / cx) * MAX;
+        card.style.transform = `perspective(800px) rotateX(${-x}deg) rotateY(${y}deg)`;
+    });
+
+    window.addEventListener('mouseleave', function() {
+        card.style.transform = 'none';
+    });
+})();
 </script>
 </body>
 </html>
