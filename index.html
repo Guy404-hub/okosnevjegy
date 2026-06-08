@@ -55,12 +55,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1000px; /* Biztosítja a 3D teret a kártyának */
+            perspective: 1000px; /* Megadja a 3D mélységet a testnek */
             overflow-x: hidden;
         }
         a { text-decoration: none; -webkit-tap-highlight-color: transparent; color: inherit; }
 
-        /* ======= KÁRTYA (3D dőléssel) ======= */
+        /* ======= KÁRTYA (A teljes névjegy, ami az egérre dől) ======= */
         .card {
             width: 100%;
             max-width: 420px;
@@ -74,7 +74,7 @@
             overflow: hidden;
             transform-style: preserve-3d;
             will-change: transform;
-            transition: transform 0.1s ease-out; /* Finom, reszponzív követés */
+            transition: transform 0.1s ease-out; /* Biztosítja a folyamatos, selymes mozgást */
         }
 
         /* ======= PROFIL SZEKCIÓ ======= */
@@ -683,29 +683,29 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
     el.addEventListener('touchend', () => { el.classList.remove('touch'); }, {passive: true});
 });
 
-/* ======= GLOBÁLIS 3D EGÉRKÖVETŐ A TELJES KÁRTYÁRA ======= */
+/* ======= KIZÁRÓLAGOS GLOBÁLIS KÁRTYA EGÉRKÖVETŐ ======= */
 const mainCard = document.getElementById('mainCard');
 
 if (window.matchMedia("(hover: hover)").matches) {
     window.addEventListener('mousemove', (e) => {
         const rect = mainCard.getBoundingClientRect();
         
-        // A kártya geometriai középpontja a képernyőn
+        // Kártya geometriai középpontja a képernyőn
         const cardX = rect.left + rect.width / 2;
         const cardY = rect.top + rect.height / 2;
         
-        // Egér távolsága a kártya közepétől
+        // Kurzor távolsága a kártya közepétől
         const deltaX = e.clientX - cardX;
         const deltaY = e.clientY - cardY;
         
-        // Maximális dőlésszög fokban (ízlés szerint állítható finomabbra/durvábbra)
+        // Maximális dőlésszög fokban
         const maxTilt = 12; 
         
-        // Normalizáljuk a távolságot a teljes böngészőablak méretéhez képest
+        // Elfordulás számítása az ablak méretével arányosan
         const tiltX = (deltaY / window.innerHeight) * -maxTilt;
         const tiltY = (deltaX / window.innerWidth) * maxTilt;
         
-        // A teljes okosnévjegy elfordul a térben az egér irányába
+        // A teljes kártyát fordítjuk el, nincsenek belső zavaró mozgások
         mainCard.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
     });
 }
