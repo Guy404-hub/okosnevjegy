@@ -73,6 +73,7 @@
             /* JAVÍTÁS: transform-style és will-change eltávolítva innen,
                mert ezek törték a flip 3D animációt */
             transition: transform 0.1s ease-out;
+            transform-style: flat;
         }
         .card::before {
             content: '';
@@ -109,9 +110,10 @@
             width: 250px;
             height: 250px;
             position: relative;
-            z-index: 1;
+            z-index: 10;
             cursor: pointer;
-            perspective: 800px;
+            perspective: 1000px;
+            transform-style: preserve-3d;
         }
         .flip-belso {
             width: 100%;
