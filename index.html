@@ -31,7 +31,7 @@
         cegEmail:    "",
         cegWebsite:  "",
         cegFacebook: "",
-        cegInstagram:",
+        cegInstagram:"",
         foSzin:      "#26a8e0",
     };
     </script>
@@ -55,12 +55,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1000px; /* Megadja a 3D mélységet a testnek */
+            perspective: 1000px;
             overflow-x: hidden;
         }
         a { text-decoration: none; -webkit-tap-highlight-color: transparent; color: inherit; }
 
-        /* ======= KÁRTYA (A teljes névjegy, ami az egérre dől) ======= */
+        /* ======= KÁRTYA ======= */
         .card {
             width: 100%;
             max-width: 420px;
@@ -72,9 +72,6 @@
             padding-bottom: 30px;
             position: relative;
             overflow: hidden;
-            transform-style: preserve-3d;
-            will-change: transform;
-            transition: transform 0.1s ease-out; /* Biztosítja a folyamatos, selymes mozgást */
         }
 
         /* ======= PROFIL SZEKCIÓ ======= */
@@ -86,7 +83,6 @@
             padding-top: 50px;
             padding-bottom: 24px;
             animation: fadeDown 0.8s cubic-bezier(0.25, 1, 0.5, 1) both;
-            transform-style: preserve-3d;
         }
 
         .profil-wrapper {
@@ -98,6 +94,8 @@
             width: 360px;
             height: 360px;
             transform-style: preserve-3d;
+            will-change: transform;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Sima visszaállás */
         }
 
         /* ======= FLIP KÁRTYA 3D ======= */
@@ -273,7 +271,6 @@
             gap: 10px;
             width: 90%;
             margin-top: 16px;
-            transform-style: preserve-3d;
         }
         .fo-gomb {
             position: relative;     
@@ -328,7 +325,6 @@
             gap: 8px;
             width: 90%;
             margin-top: 10px;
-            transform-style: preserve-3d;
         }
         .koz-gomb {
             position: relative;     
@@ -683,30 +679,41 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
     el.addEventListener('touchend', () => { el.classList.remove('touch'); }, {passive: true});
 });
 
-/* ======= KIZÁRÓLAGOS GLOBÁLIS KÁRTYA EGÉRKÖVETŐ ======= */
-const mainCard = document.getElementById('mainCard');
+/* ======= FRISSÍTETT: INTERAKTÍV PROFIL KÖVETÉS (PARALLAXIS) ======= */
+const cardContainer = document.getElementById('mainCard');
+const profilWrapper = document.getElementById('profilWrapper');
 
 if (window.matchMedia("(hover: hover)").matches) {
-    window.addEventListener('mousemove', (e) => {
-        const rect = mainCard.getBoundingClientRect();
+    cardContainer.addEventListener('mousemove', (e) => {
+        const rect = profilWrapper.getBoundingClientRect();
         
-        // Kártya geometriai középpontja a képernyőn
-        const cardX = rect.left + rect.width / 2;
-        const cardY = rect.top + rect.height / 2;
+        // A profil-wrapper középpontja a képernyőhöz képest
+        const wrapperX = rect.left + rect.width / 2;
+        const wrapperY = rect.top + rect.height / 2;
         
-        // Kurzor távolsága a kártya közepétől
-        const deltaX = e.clientX - cardX;
-        const deltaY = e.clientY - cardY;
+        // Egér távolsága a középponttól
+        const deltaX = e.clientX - wrapperX;
+        const deltaY = e.clientY - wrapperY;
         
-        // Maximális dőlésszög fokban
-        const maxTilt = 12; 
+        // Maximum dőlési és eltolási értékek fokban és pixelben
+        const maxTilt = 12; // dőlésszög fokban
+        const maxMove = 10; // eltolás pixelben
         
-        // Elfordulás számítása az ablak méretével arányosan
+        // Normalizálás a képernyő méretéhez képest, hogy finom legyen
         const tiltX = (deltaY / window.innerHeight) * -maxTilt;
         const tiltY = (deltaX / window.innerWidth) * maxTilt;
+        const moveX = (deltaX / window.innerWidth) * maxMove;
+        const moveY = (deltaY / window.innerHeight) * maxMove;
         
-        // A teljes kártyát fordítjuk el, nincsenek belső zavaró mozgások
-        mainCard.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+        // Mozgás közbeni azonnali reakció
+        profilWrapper.style.transition = 'transform 0.08s ease-out';
+        profilWrapper.style.transform = `translateX(${moveX}px) translateY(${moveY}px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+    });
+
+    // Ha az egér elhagyja a kártya területét, lágyan visszaáll középre
+    cardContainer.addEventListener('mouseleave', () => {
+        profilWrapper.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+        profilWrapper.style.transform = 'translateX(0px) translateY(0px) rotateX(0deg) rotateY(0deg)';
     });
 }
 </script>
