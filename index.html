@@ -42,8 +42,6 @@
             --fo: #26a8e0;
             --fo-sotet: #1a8fc4;
             --fo-vilagos: #59c4f1;
-            --feher: #ffffff;
-            --szoveg: #e8f4fc;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
@@ -58,7 +56,6 @@
         }
         a { text-decoration: none; -webkit-tap-highlight-color: transparent; color: inherit; }
 
-        /* ======= KÁRTYA ======= */
         .card {
             width: 100%;
             max-width: 420px;
@@ -70,10 +67,7 @@
             padding-bottom: 30px;
             position: relative;
             overflow: hidden;
-            /* JAVÍTÁS: transform-style és will-change eltávolítva innen,
-               mert ezek törték a flip 3D animációt */
             transition: transform 0.1s ease-out;
-            transform-style: flat;
         }
         .card::before {
             content: '';
@@ -94,7 +88,6 @@
             pointer-events: none;
         }
 
-        /* ======= PROFIL ======= */
         .profil-szekció {
             width: 100%;
             display: flex;
@@ -105,15 +98,22 @@
             animation: fadeDown 0.7s ease both;
         }
 
-        /* ======= FLIP KÁRTYA ======= */
-        .flip-container {
+        .profil-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        /* ======= FLIP — teljesen önálló 3D kontextus ======= */
+        .flip-scene {
             width: 250px;
             height: 250px;
+            perspective: 1000px;
             position: relative;
             z-index: 10;
             cursor: pointer;
-            perspective: 1000px;
-            transform-style: preserve-3d;
         }
         .flip-belso {
             width: 100%;
@@ -121,11 +121,10 @@
             position: relative;
             transform-style: preserve-3d;
             transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
-            animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
         }
         .flip-elol, .flip-hatul {
             position: absolute;
-            width: 100%; height: 100%;
+            inset: 0;
             border-radius: 50%;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
@@ -167,18 +166,13 @@
             display: flex; align-items: center; justify-content: center;
             position: relative;
             overflow: hidden;
+            pointer-events: none;
         }
         .profil-kep {
             width: 100%; height: 100%;
             object-fit: cover;
             border-radius: 50%;
-        }
-        /* JAVÍTÁS: pointer-events none hogy a klikk átmenjen a flip containernek */
-        .profil-kep, .profil-keret * {
             pointer-events: none;
-        }
-        .profil-placeholder {
-            width: 60%; fill: rgba(255,255,255,0.5);
         }
         .nev {
             font-size: 1.8em;
@@ -198,7 +192,6 @@
             line-height: 1.3;
         }
 
-        /* ======= MENTÉS GOMB ======= */
         @keyframes mentes-pulzal {
             0%, 100% { box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 0 0 0 rgba(255,255,255,0.5); }
             50%       { box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 0 0 8px rgba(255,255,255,0); }
@@ -227,26 +220,14 @@
             animation: fadeUp 0.6s ease 0.4s both, mentes-pulzal 2.5s ease-in-out 1s infinite, mentes-shimmer 3s linear 1s infinite, lebeg 3s ease-in-out 0.2s infinite;
         }
         .mentes-gomb svg { width: 20px; fill: #0d6a96; transition: transform 0.3s; flex-shrink: 0; }
-        .mentes-gomb:active, .mentes-gomb.touch {
-            animation: none;
-            transform: scale(0.95);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            background: #e8f4fc;
-        }
+        .mentes-gomb:active, .mentes-gomb.touch { animation: none; transform: scale(0.95); box-shadow: 0 2px 10px rgba(0,0,0,0.2); background: #e8f4fc; }
         @media (hover: hover) {
             .mentes-gomb:hover { animation-play-state: paused; box-shadow: 0 8px 28px rgba(0,0,0,0.28); }
             .mentes-gomb:hover svg { transform: rotate(-10deg) scale(1.15); }
         }
 
-        /* ======= ELVÁLASZTÓ ======= */
-        .elvalaszto {
-            width: 85%;
-            height: 1px;
-            background: rgba(255,255,255,0.2);
-            margin: 20px 0 4px;
-        }
+        .elvalaszto { width: 85%; height: 1px; background: rgba(255,255,255,0.2); margin: 20px 0 4px; }
 
-        /* ======= FŐ GOMBOK ======= */
         .fo-gombok {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -256,71 +237,47 @@
             animation: fadeUp 0.6s ease 0.5s both;
         }
         .fo-gomb {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             gap: 6px;
             background: rgba(255,255,255,0.12);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 16px;
             padding: 14px 6px;
             color: white;
-            font-size: 0.82em;
-            font-weight: 700;
-            letter-spacing: 0.3px;
+            font-size: 0.82em; font-weight: 700; letter-spacing: 0.3px;
             cursor: pointer;
             transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
             backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
             animation: lebeg 3s ease-in-out infinite;
         }
         .fo-gomb svg { width: 36px; fill: white; transition: transform 0.3s; }
-        .fo-gomb .csel { stroke: white; fill: none; stroke-miterlimit: 10; stroke-width: 3px; }
         .fo-gomb:nth-child(1) { animation-delay: 0s; }
         .fo-gomb:nth-child(2) { animation-delay: 0.4s; }
         .fo-gomb:nth-child(3) { animation-delay: 0.8s; }
         .fo-gomb:nth-child(4) { animation-delay: 1.2s; }
         .fo-gomb:nth-child(5) { animation-delay: 1.6s; }
-        .fo-gomb:active, .fo-gomb.touch {
-            animation: none;
-            background: rgba(255,255,255,0.28);
-            transform: scale(0.94);
-        }
+        .fo-gomb:active, .fo-gomb.touch { animation: none; background: rgba(255,255,255,0.28); transform: scale(0.94); }
         @media (hover: hover) {
             .fo-gomb:hover { animation: none; background: rgba(255,255,255,0.22); transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
             .fo-gomb:hover svg { transform: scale(1.12); }
         }
 
-        /* ======= KÖZÖSSÉGI MÉDIA ======= */
         .kozossegi-gombok {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
-            width: 90%;
-            margin-top: 10px;
+            display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;
+            gap: 8px; width: 90%; margin-top: 10px;
             animation: fadeUp 0.6s ease 0.65s both;
         }
         .koz-gomb {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             gap: 4px;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.18);
             border-radius: 14px;
             padding: 10px 14px;
-            color: white;
-            font-size: 0.75em;
-            font-weight: 700;
-            cursor: pointer;
-            min-width: 64px;
+            color: white; font-size: 0.75em; font-weight: 700;
+            cursor: pointer; min-width: 64px;
             transition: background 0.2s, transform 0.15s;
             backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
             animation: lebeg 3.5s ease-in-out infinite;
         }
         .koz-gomb:nth-child(1) { animation-delay: 0.2s; }
@@ -335,21 +292,13 @@
             .koz-gomb:hover svg { transform: scale(1.15) rotate(-5deg); }
         }
 
-        /* ======= VISSZA TETEJÉRE ======= */
-        .top-gomb {
-            margin-top: 28px;
-            display: flex; align-items: center; justify-content: center;
-            animation: fadeUp 0.6s ease 0.8s both;
-        }
+        .top-gomb { margin-top: 28px; display: flex; align-items: center; justify-content: center; animation: fadeUp 0.6s ease 0.8s both; }
         .top-gomb svg { width: 34px; fill: rgba(255,255,255,0.4); transition: fill 0.2s, transform 0.2s; }
         .top-gomb:active svg, .top-gomb.touch svg { fill: white; transform: translateY(-3px); }
         @media (hover: hover) { .top-gomb:hover svg { fill: white; transform: translateY(-3px); } }
 
-        /* ======= MODAL ======= */
         .modal {
-            display: none;
-            position: fixed; z-index: 999;
-            inset: 0;
+            display: none; position: fixed; z-index: 999; inset: 0;
             background: rgba(0,0,0,0.6);
             align-items: center; justify-content: center;
             backdrop-filter: blur(3px);
@@ -357,40 +306,28 @@
         .modal-belso {
             background: linear-gradient(135deg, #1a8fc4, #0d5f82);
             border: 1px solid rgba(255,255,255,0.25);
-            border-radius: 20px;
-            padding: 28px 24px 24px;
+            border-radius: 20px; padding: 28px 24px 24px;
             width: 82%; max-width: 300px;
-            text-align: center;
-            color: white;
-            font-size: 1.2em;
-            line-height: 1.6;
+            text-align: center; color: white; font-size: 1.2em; line-height: 1.6;
             box-shadow: 0 20px 60px rgba(0,0,0,0.4);
             position: relative;
             animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
         }
-        .modal-zar {
-            position: absolute; top: 12px; right: 14px;
-            cursor: pointer; opacity: 0.7;
-            transition: opacity 0.2s, transform 0.3s;
-            width: 20px; height: 20px;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .modal-zar { position: absolute; top: 12px; right: 14px; cursor: pointer; opacity: 0.7; transition: opacity 0.2s, transform 0.3s; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
         .modal-zar:hover { opacity: 1; transform: rotate(90deg); }
         .modal-zar svg { width: 16px; fill: white; }
         .vastag { font-weight: 800; }
         .kiemelt { color: #a8dff5; font-weight: 800; }
 
-        /* ======= ANIMÁCIÓK ======= */
         @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes popIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
         @keyframes lebeg { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
-
         @keyframes ripple { from { transform: scale(0); opacity: 0.5; } to { transform: scale(2.5); opacity: 0; } }
+
         .ripple-wrap { position: relative; overflow: hidden; }
         .ripple-circle {
-            position: absolute;
-            border-radius: 50%;
+            position: absolute; border-radius: 50%;
             background: rgba(255,255,255,0.35);
             width: 60px; height: 60px;
             margin-left: -30px; margin-top: -30px;
@@ -398,49 +335,23 @@
             animation: ripple 0.5s ease-out forwards;
         }
 
-        /* ======= PROFIL WRAPPER ======= */
-        .profil-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
-        }
-
-        /* ======= PING GYŰRŰK ======= */
         .ping-gyuru {
-            position: absolute;
-            border-radius: 50%;
+            position: absolute; border-radius: 50%;
             border: 1.5px solid rgba(255,255,255,0.4);
             animation: ping 3.5s ease-out infinite;
-            pointer-events: none;
-            width: 264px; height: 264px;
+            pointer-events: none; width: 264px; height: 264px;
         }
         .ping-gyuru:nth-child(1) { animation-delay: 0s; }
         .ping-gyuru:nth-child(2) { animation-delay: 1.15s; }
         .ping-gyuru:nth-child(3) { animation-delay: 2.3s; }
         @keyframes ping { 0% { transform: scale(1); opacity: 0.55; } 100% { transform: scale(1.9); opacity: 0; } }
 
-        /* ======= ORBIT GYŰRŰK ======= */
-        .orbit-gyuru {
-            position: absolute;
-            border-radius: 50%;
-            border: 1px dashed rgba(255,255,255,0.22);
-            pointer-events: none;
-        }
+        .orbit-gyuru { position: absolute; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.22); pointer-events: none; }
         .orbit-gyuru.bels { width: 298px; height: 298px; animation: forog 16s linear infinite; }
         .orbit-gyuru.kulso { width: 360px; height: 360px; animation: forog 26s linear infinite reverse; border-style: dotted; border-color: rgba(255,255,255,0.13); }
         @keyframes forog { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .orbit-dot {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(13,106,150,0.75);
-            border: 1px solid rgba(255,255,255,0.35);
-            display: flex; align-items: center; justify-content: center;
-            backdrop-filter: blur(4px);
-            pointer-events: none;
-        }
+        .orbit-dot { position: absolute; border-radius: 50%; background: rgba(13,106,150,0.75); border: 1px solid rgba(255,255,255,0.35); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); pointer-events: none; }
         .orbit-dot.nagy { width: 36px; height: 36px; }
         .orbit-dot.kicsi { width: 26px; height: 26px; }
         .orbit-dot svg { fill: none; stroke: rgba(255,255,255,0.9); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -449,7 +360,6 @@
         .orbit-gyuru.bels .orbit-dot  { animation: ellenforog 16s linear infinite; }
         .orbit-gyuru.kulso .orbit-dot { animation: ellenforog 26s linear infinite reverse; }
         @keyframes ellenforog { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
-
         .orbit-gyuru.bels .orbit-dot:nth-child(1) { top: calc(50% - 18px); left: -18px; }
         .orbit-gyuru.bels .orbit-dot:nth-child(2) { top: -18px; left: calc(50% - 18px); }
         .orbit-gyuru.bels .orbit-dot:nth-child(3) { top: calc(50% - 18px); right: -18px; }
@@ -465,16 +375,13 @@
             50%       { box-shadow: 0 0 0 9px rgba(255,255,255,0.22), 0 0 55px rgba(38,168,224,0.5),  0 8px 30px rgba(0,0,0,0.25); }
         }
 
-        /* ======= SHIMMER ======= */
         .profil-keret::after {
             content: '';
-            position: absolute;
-            top: -100%; left: -75%;
+            position: absolute; top: -100%; left: -75%;
             width: 50%; height: 300%;
             background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.35) 55%, rgba(255,255,255,0.18) 60%, transparent 70%);
             animation: shimmer 4s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 10;
+            pointer-events: none; z-index: 10;
         }
         @keyframes shimmer { 0% { left: -75%; top: -100%; } 100% { left: 150%; top: 100%; } }
     </style>
@@ -494,7 +401,6 @@
                 <div class="orbit-dot nagy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
                 <div class="orbit-dot nagy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
             </div>
-
             <div class="orbit-gyuru kulso">
                 <div class="orbit-dot kicsi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
                 <div class="orbit-dot kicsi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
@@ -503,7 +409,8 @@
                 <div class="orbit-dot kicsi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
             </div>
 
-            <div class="flip-container" id="flipContainer">
+            <!-- FLIP SCENE: önálló perspective kontextus, nem függ a .card transform-tól -->
+            <div class="flip-scene" id="flipScene">
                 <div class="flip-belso" id="flipBelso">
                     <div class="flip-elol">
                         <div class="profil-keret" id="profilKeret"></div>
@@ -515,6 +422,7 @@
                 </div>
             </div>
         </div>
+
         <h1 class="nev" id="nevEl"></h1>
         <p class="beosztas" id="beosztasEl"></p>
         <a id="mentesGomb" href="#" class="mentes-gomb ripple-wrap">
@@ -527,7 +435,7 @@
     <div class="fo-gombok" id="foGombok"></div>
     <div class="kozossegi-gombok" id="kozossegi" style="margin-top:16px"></div>
 
-    <a class="top-gomb ripple-wrap" href="#top" id="topGomb">
+    <a class="top-gomb ripple-wrap" href="#top">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
             <path d="M30,57.75A27.75,27.75,0,1,1,57.74,30,27.77,27.77,0,0,1,30,57.75Zm0-53A25.25,25.25,0,1,0,55.24,30,25.27,25.27,0,0,0,30,4.75Z"/>
             <path d="M16,38.85a2.5,2.5,0,0,1-1.81-4.23l14.05-14.7a2.58,2.58,0,0,1,3.62,0l14.05,14.7a2.5,2.5,0,1,1-3.62,3.46L30,25.26,17.76,38.08A2.51,2.51,0,0,1,16,38.85Z"/>
@@ -640,7 +548,7 @@ kozAdatok.filter(g => g.ha).forEach(g => {
 });
 
 // ======= PROFIL FLIP =======
-var flipEl = document.getElementById('flipContainer');
+var flipScene = document.getElementById('flipScene');
 var flipBelso = document.getElementById('flipBelso');
 var flipped = false;
 var touchMoved = false;
@@ -650,18 +558,18 @@ function doFlip() {
     flipBelso.style.transform = flipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
 }
 
-flipEl.addEventListener('click', function(e) {
+flipScene.addEventListener('click', function(e) {
     e.stopPropagation();
     if (!touchMoved) doFlip();
 });
-flipEl.addEventListener('touchstart', function(e) {
+flipScene.addEventListener('touchstart', function(e) {
     touchMoved = false;
     e.stopPropagation();
 }, { passive: true });
-flipEl.addEventListener('touchmove', function() {
+flipScene.addEventListener('touchmove', function() {
     touchMoved = true;
 }, { passive: true });
-flipEl.addEventListener('touchend', function(e) {
+flipScene.addEventListener('touchend', function(e) {
     e.stopPropagation();
     if (!touchMoved) { e.preventDefault(); doFlip(); }
 });
@@ -690,7 +598,7 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
     el.addEventListener('touchend',   () => setTimeout(() => el.classList.remove('touch'), 300), { passive: true });
 });
 
-// ======= GYROSCOPE TILT =======
+// ======= GYROSCOPE + EGÉR TILT =======
 (function() {
     const card = document.getElementById('mainCard');
     const MAX = 8;
@@ -703,7 +611,7 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
         }, true);
     }
     window.addEventListener('mousemove', function(e) {
-        if (flipEl.contains(e.target)) return;
+        if (flipScene.contains(e.target)) return;
         const cx = window.innerWidth  / 2;
         const cy = window.innerHeight / 2;
         const x = ((e.clientY - cy) / cy) * MAX;
