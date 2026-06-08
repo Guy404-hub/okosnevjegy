@@ -55,8 +55,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1000px; /* Szükséges a 3D dőlési hatáshoz */
-            overflow-x: hidden;
         }
         a { text-decoration: none; -webkit-tap-highlight-color: transparent; color: inherit; }
 
@@ -72,9 +70,7 @@
             padding-bottom: 30px;
             position: relative;
             overflow: hidden;
-            transform-style: preserve-3d; /* Biztosítja, hogy a belső elemek is 3D-ben reagáljanak */
-            will-change: transform;
-            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* Lágy visszaállás, amikor elhagyja az egér */
+            transition: transform 0.1s ease-out;
         }
 
         /* ======= PROFIL SZEKCIÓ ======= */
@@ -232,6 +228,7 @@
             cursor: pointer;
             border: none;
             transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            /* Összevont indító animáció: beúszás + lebegés alapértelmezetten */
             animation: fadeUp 0.7s cubic-bezier(0.25, 1, 0.5, 1) 0.2s both, 
                        mentes-pulzal 2.5s ease-in-out 1s infinite, 
                        mentes-shimmer 3s linear 1s infinite, 
@@ -293,6 +290,7 @@
             transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
+            /* Alap beúszás, amit a dinamikus JS kiegészít a folyamatos lebegéssel */
             animation: fadeUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) both;
         }
         .fo-gomb svg { width: 28px; height: 28px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s; }
@@ -348,6 +346,7 @@
             transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
+            /* Alap beúszás, amit a dinamikus JS kiegészít a folyamatos lebegéssel */
             animation: fadeUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) both;
         }
         .koz-gomb svg { width: 22px; height: 22px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -608,6 +607,7 @@ const foGombokEl = document.getElementById('foGombok');
 const kozossegiEl = document.getElementById('kozossegi');
 const foGombTipusok = ['telefon', 'sms', 'email', 'website', 'iskola'];
 
+// Gombok generálása
 let foGombIndex = 0;
 let kozGombIndex = 0;
 
@@ -631,12 +631,16 @@ Object.keys(CARD).forEach(kulcs => {
         if (kulcs === 'website' || kulcs === 'iskola') a.target = '_blank';
         a.innerHTML = gombHtml;
         
+        // LÉPCSŐZETES ANIMÁCIÓ BEÁLLÍTÁSA (Staggered Intro)
+        // A beúszás késleltetése növekszik, majd miután beúszott, elindul a folyamatos lebegés
         const delay = 0.4 + (foGombIndex * 0.12);
         a.style.animationDelay = `${delay}s`;
         
+        // Miután véget ér a beúszás, rátesszük a végtelenített lebegést
         setTimeout(() => {
             if(!a.classList.contains('touch')) {
                 a.style.animation = `lebeg 3s ease-in-out infinite`;
+                // Különböző kezdőpontok, hogy ne egyszerre mozogjanak
                 a.style.animationDelay = `${foGombIndex * 0.4}s`; 
             }
         }, (delay + 0.6) * 1000);
@@ -650,6 +654,7 @@ Object.keys(CARD).forEach(kulcs => {
         a.target = '_blank';
         a.innerHTML = gombHtml;
         
+        // LÉPCSŐZETES ANIMÁCIÓ A KÖZÖSSÉGI GOMBOKNAK
         const delay = 0.6 + (kozGombIndex * 0.1);
         a.style.animationDelay = `${delay}s`;
         
@@ -681,39 +686,6 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
     el.addEventListener('touchstart', () => { el.classList.add('touch'); }, {passive: true});
     el.addEventListener('touchend', () => { el.classList.remove('touch'); }, {passive: true});
 });
-
-/* ======= ÚJ: EGÉRKÖVETŐ 3D PARALLAXIS ======= */
-const cardElement = document.getElementById('mainCard');
-
-// Csak asztali gépeken fusson, ahol van hover lehetőség (egér)
-if (window.matchMedia("(hover: hover)").matches) {
-    cardElement.addEventListener('mousemove', (e) => {
-        const cardRect = cardElement.getBoundingClientRect();
-        
-        // Egér pozíciója a kártyán belül (százalékosan a középponthoz képest)
-        const x = e.clientX - cardRect.left;
-        const y = e.clientY - cardRect.top;
-        
-        const midX = cardRect.width / 2;
-        const midY = cardRect.height / 2;
-        
-        // Maximális dőlésszög (fokban mérve, a 6-8 fok az ideális, ami nem túl agresszív)
-        const maxRotate = 8; 
-        
-        const rotateX = ((midY - y) / midY) * maxRotate;
-        const rotateY = ((x - midX) / midX) * maxRotate;
-        
-        // Mozgás közben kivesszük a transition-t a teljesen azonnali reakcióért
-        cardElement.style.transition = 'transform 0.1s ease-out';
-        cardElement.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    });
-
-    // Ha az egér elhagyja a kártyát, lágyan visszaáll a helyére
-    cardElement.addEventListener('mouseleave', () => {
-        cardElement.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
-        cardElement.style.transform = 'rotateX(0deg) rotateY(0deg)';
-    });
-}
 </script>
 </body>
 </html>
