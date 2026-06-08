@@ -45,6 +45,18 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
+        #typing-name {
+            font-size: 3rem;
+            font-weight: bold;
+            font-family: monospace;
+            border-right: 3px solid #000;
+            white-space: nowrap;
+            animation: blink-caret 0.75s step-end infinite;
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: black; }
+        }
         body {
             font-family: 'Saira Condensed', sans-serif;
             font-weight: 500;
@@ -423,7 +435,7 @@
             </div>
         </div>
 
-        <h1 class="nev" id="nevEl"></h1>
+        <h1 class="nev" id="nevEl" id="typing-name"></h1>
         <p class="beosztas" id="beosztasEl"></p>
         <a id="mentesGomb" href="#" class="mentes-gomb ripple-wrap">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm3-10H5V5h10v4z"/></svg>
@@ -622,6 +634,20 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
         card.style.transform = 'none';
     });
 })();
+</script>
+<script>
+        const name = "Barta Csanád Márk"; 
+        const speed = 150; 
+        let i = 0;
+
+        function typeWriter() {
+            if (i < name.length) {
+                document.getElementById("typing-name").innerHTML += name.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+        window.onload = typeWriter;
 </script>
 </body>
 </html>
