@@ -6,23 +6,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- ============================================================ -->
-    <!--                  TESTRESZABÁS ITT KEZDŐDIK                   -->
-    <!-- ============================================================ -->
     <script>
     const CARD = {
         nev:        "Barta Csanád Márk",
         beosztas:   "IT Rendszer- és Alkalmazásüzemeltető",
         vcfFajl:    "nevjegy.vcf",
-        profilkep:  "profil.jpg",   // vagy "" ha nincs
-
+        profilkep:  "profil.jpg",
         telefon:    "+36703672008",
         sms:        "+36703672008",
-        
         email:      "bartacsanad2@gmail.com",
-        
-
         facebook:   "https://www.facebook.com/profile.php?id=61551043671795",
         instagram:  "",
         linkedin:   "",
@@ -32,7 +24,6 @@
         iskola:     "https://www.viraghgedeon.hu/",
         twitter:    "",
         website:    "",
-
         cegSzekcio:  false,
         cegNev:      "",
         cegLogo:     "",
@@ -41,17 +32,11 @@
         cegWebsite:  "",
         cegFacebook: "",
         cegInstagram:"",
-
         foSzin:     "#26a8e0",
     };
     </script>
-    <!-- ============================================================ -->
-    <!--                  TESTRESZABÁS VÉGE                           -->
-    <!-- ============================================================ -->
-
     <title>Névjegy</title>
     <meta name="theme-color" content="#1a8fc4">
-
     <style>
         :root {
             --fo: #26a8e0;
@@ -60,11 +45,8 @@
             --feher: #ffffff;
             --szoveg: #e8f4fc;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         html { scroll-behavior: smooth; }
-
         body {
             font-family: 'Saira Condensed', sans-serif;
             font-weight: 500;
@@ -74,7 +56,6 @@
             align-items: center;
             justify-content: center;
         }
-
         a { text-decoration: none; -webkit-tap-highlight-color: transparent; color: inherit; }
 
         /* ======= KÁRTYA ======= */
@@ -89,9 +70,10 @@
             padding-bottom: 30px;
             position: relative;
             overflow: hidden;
+            /* JAVÍTÁS: transform-style és will-change eltávolítva innen,
+               mert ezek törték a flip 3D animációt */
+            transition: transform 0.1s ease-out;
         }
-
-        /* Háttér dekoráció – körök */
         .card::before {
             content: '';
             position: absolute;
@@ -122,26 +104,23 @@
             animation: fadeDown 0.7s ease both;
         }
 
-        /* ======= PROFIL FLIP KÁRTYA ======= */
+        /* ======= FLIP KÁRTYA ======= */
         .flip-container {
-            width: 250px; height: 250px;
+            width: 250px;
+            height: 250px;
             position: relative;
             z-index: 1;
             cursor: pointer;
+            perspective: 800px;
         }
-
         .flip-belso {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
             animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
         }
-
-        .flip-container.flipped .flip-belso {
-            transform: rotateY(180deg);
-        }
-
         .flip-elol, .flip-hatul {
             position: absolute;
             width: 100%; height: 100%;
@@ -151,13 +130,11 @@
             overflow: hidden;
             border: 3px solid rgba(255,255,255,0.8);
         }
-
         .flip-elol {
             background: rgba(255,255,255,0.15);
             display: flex; align-items: center; justify-content: center;
             animation: lelegzes 4s ease-in-out 1s infinite;
         }
-
         .flip-hatul {
             background: #0a2f40;
             transform: rotateY(180deg);
@@ -168,14 +145,12 @@
             gap: 8px;
             padding: 14px;
         }
-
         .flip-hatul-kep {
-            width: 180px; height: 120px;
+            width: 140px; height: 95px;
             object-fit: cover;
             border-radius: 10px;
             border: 2px solid rgba(255,255,255,0.3);
         }
-
         .flip-hatul-szoveg {
             color: white;
             font-size: 0.75em;
@@ -184,23 +159,25 @@
             line-height: 1.3;
             text-shadow: 0 1px 4px rgba(0,0,0,0.5);
         }
-
         .profil-keret {
             width: 100%; height: 100%;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
-
         .profil-kep {
             width: 100%; height: 100%;
             object-fit: cover;
             border-radius: 50%;
         }
-
+        /* JAVÍTÁS: pointer-events none hogy a klikk átmenjen a flip containernek */
+        .profil-kep, .profil-keret * {
+            pointer-events: none;
+        }
         .profil-placeholder {
             width: 60%; fill: rgba(255,255,255,0.5);
         }
-
         .nev {
             font-size: 1.8em;
             font-weight: 800;
@@ -209,7 +186,6 @@
             text-align: center;
             text-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
-
         .beosztas {
             font-size: 0.95em;
             font-weight: 600;
@@ -229,7 +205,6 @@
             0%   { background-position: -200% center; }
             100% { background-position: 200% center; }
         }
-
         .mentes-gomb {
             display: flex;
             align-items: center;
@@ -257,10 +232,7 @@
             background: #e8f4fc;
         }
         @media (hover: hover) {
-            .mentes-gomb:hover {
-                animation-play-state: paused;
-                box-shadow: 0 8px 28px rgba(0,0,0,0.28);
-            }
+            .mentes-gomb:hover { animation-play-state: paused; box-shadow: 0 8px 28px rgba(0,0,0,0.28); }
             .mentes-gomb:hover svg { transform: rotate(-10deg) scale(1.15); }
         }
 
@@ -272,7 +244,7 @@
             margin: 20px 0 4px;
         }
 
-        /* ======= FŐ GOMBOK GRID ======= */
+        /* ======= FŐ GOMBOK ======= */
         .fo-gombok {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -281,7 +253,6 @@
             margin-top: 16px;
             animation: fadeUp 0.6s ease 0.5s both;
         }
-
         .fo-gomb {
             display: flex;
             flex-direction: column;
@@ -300,52 +271,26 @@
             transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
+            animation: lebeg 3s ease-in-out infinite;
         }
         .fo-gomb svg { width: 36px; fill: white; transition: transform 0.3s; }
         .fo-gomb .csel { stroke: white; fill: none; stroke-miterlimit: 10; stroke-width: 3px; }
-
-        /* Lebegő gomb animáció */
-        @keyframes lebeg {
-            0%, 100% { transform: translateY(0px); }
-            50%       { transform: translateY(-5px); }
-        }
-
-        .fo-gomb {
-            animation: lebeg 3s ease-in-out infinite;
-        }
         .fo-gomb:nth-child(1) { animation-delay: 0s; }
         .fo-gomb:nth-child(2) { animation-delay: 0.4s; }
         .fo-gomb:nth-child(3) { animation-delay: 0.8s; }
         .fo-gomb:nth-child(4) { animation-delay: 1.2s; }
         .fo-gomb:nth-child(5) { animation-delay: 1.6s; }
-
         .fo-gomb:active, .fo-gomb.touch {
             animation: none;
             background: rgba(255,255,255,0.28);
             transform: scale(0.94);
         }
         @media (hover: hover) {
-            .fo-gomb:hover {
-                animation: none;
-                background: rgba(255,255,255,0.22);
-                transform: translateY(-4px);
-                box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            }
+            .fo-gomb:hover { animation: none; background: rgba(255,255,255,0.22); transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
             .fo-gomb:hover svg { transform: scale(1.12); }
         }
 
         /* ======= KÖZÖSSÉGI MÉDIA ======= */
-        .kozossegi-cim {
-            font-size: 0.78em;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: rgba(255,255,255,0.5);
-            text-transform: uppercase;
-            margin-top: 22px;
-            margin-bottom: 2px;
-            animation: fadeUp 0.6s ease 0.6s both;
-        }
-
         .kozossegi-gombok {
             display: flex;
             flex-direction: row;
@@ -356,7 +301,6 @@
             margin-top: 10px;
             animation: fadeUp 0.6s ease 0.65s both;
         }
-
         .koz-gomb {
             display: flex;
             flex-direction: column;
@@ -383,18 +327,9 @@
         .koz-gomb:nth-child(4) { animation-delay: 1.7s; }
         .koz-gomb:nth-child(5) { animation-delay: 0.5s; }
         .koz-gomb svg { width: 28px; fill: white; transition: transform 0.3s; }
-
-        .koz-gomb:active, .koz-gomb.touch {
-            animation: none;
-            background: rgba(255,255,255,0.25);
-            transform: scale(0.93);
-        }
+        .koz-gomb:active, .koz-gomb.touch { animation: none; background: rgba(255,255,255,0.25); transform: scale(0.93); }
         @media (hover: hover) {
-            .koz-gomb:hover {
-                animation: none;
-                background: rgba(255,255,255,0.2);
-                transform: translateY(-3px);
-            }
+            .koz-gomb:hover { animation: none; background: rgba(255,255,255,0.2); transform: translateY(-3px); }
             .koz-gomb:hover svg { transform: scale(1.15) rotate(-5deg); }
         }
 
@@ -404,14 +339,9 @@
             display: flex; align-items: center; justify-content: center;
             animation: fadeUp 0.6s ease 0.8s both;
         }
-        .top-gomb svg {
-            width: 34px; fill: rgba(255,255,255,0.4);
-            transition: fill 0.2s, transform 0.2s;
-        }
+        .top-gomb svg { width: 34px; fill: rgba(255,255,255,0.4); transition: fill 0.2s, transform 0.2s; }
         .top-gomb:active svg, .top-gomb.touch svg { fill: white; transform: translateY(-3px); }
-        @media (hover: hover) {
-            .top-gomb:hover svg { fill: white; transform: translateY(-3px); }
-        }
+        @media (hover: hover) { .top-gomb:hover svg { fill: white; transform: translateY(-3px); } }
 
         /* ======= MODAL ======= */
         .modal {
@@ -449,24 +379,12 @@
         .kiemelt { color: #a8dff5; font-weight: 800; }
 
         /* ======= ANIMÁCIÓK ======= */
-        @keyframes fadeDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.85); }
-            to   { opacity: 1; transform: scale(1); }
-        }
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+        @keyframes lebeg { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
 
-        /* Gomb ripple effect */
-        @keyframes ripple {
-            from { transform: scale(0); opacity: 0.5; }
-            to   { transform: scale(2.5); opacity: 0; }
-        }
+        @keyframes ripple { from { transform: scale(0); opacity: 0.5; } to { transform: scale(2.5); opacity: 0; } }
         .ripple-wrap { position: relative; overflow: hidden; }
         .ripple-circle {
             position: absolute;
@@ -478,7 +396,7 @@
             animation: ripple 0.5s ease-out forwards;
         }
 
-        /* ======= PROFIL ANIMÁCIÓ ======= */
+        /* ======= PROFIL WRAPPER ======= */
         .profil-wrapper {
             position: relative;
             display: flex;
@@ -486,12 +404,8 @@
             justify-content: center;
             margin-bottom: 16px;
         }
-        .flip-container {
-            pointer-events: all;
-            cursor: pointer;
-        }
 
-        /* Pulzáló ping gyűrűk */
+        /* ======= PING GYŰRŰK ======= */
         .ping-gyuru {
             position: absolute;
             border-radius: 50%;
@@ -503,34 +417,18 @@
         .ping-gyuru:nth-child(1) { animation-delay: 0s; }
         .ping-gyuru:nth-child(2) { animation-delay: 1.15s; }
         .ping-gyuru:nth-child(3) { animation-delay: 2.3s; }
+        @keyframes ping { 0% { transform: scale(1); opacity: 0.55; } 100% { transform: scale(1.9); opacity: 0; } }
 
-        @keyframes ping {
-            0%   { transform: scale(1);   opacity: 0.55; }
-            100% { transform: scale(1.9); opacity: 0; }
-        }
-
-        /* Két orbit gyűrű */
+        /* ======= ORBIT GYŰRŰK ======= */
         .orbit-gyuru {
             position: absolute;
             border-radius: 50%;
             border: 1px dashed rgba(255,255,255,0.22);
             pointer-events: none;
         }
-        .orbit-gyuru.bels {
-            width: 298px; height: 298px;
-            animation: forog 16s linear infinite;
-        }
-        .orbit-gyuru.kulso {
-            width: 360px; height: 360px;
-            animation: forog 26s linear infinite reverse;
-            border-style: dotted;
-            border-color: rgba(255,255,255,0.13);
-        }
-
-        @keyframes forog {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(360deg); }
-        }
+        .orbit-gyuru.bels { width: 298px; height: 298px; animation: forog 16s linear infinite; }
+        .orbit-gyuru.kulso { width: 360px; height: 360px; animation: forog 26s linear infinite reverse; border-style: dotted; border-color: rgba(255,255,255,0.13); }
+        @keyframes forog { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         .orbit-dot {
             position: absolute;
@@ -546,124 +444,70 @@
         .orbit-dot svg { fill: none; stroke: rgba(255,255,255,0.9); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         .orbit-dot.nagy svg { width: 18px; height: 18px; }
         .orbit-dot.kicsi svg { width: 13px; height: 13px; }
-
         .orbit-gyuru.bels .orbit-dot  { animation: ellenforog 16s linear infinite; }
         .orbit-gyuru.kulso .orbit-dot { animation: ellenforog 26s linear infinite reverse; }
+        @keyframes ellenforog { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
 
-        @keyframes ellenforog {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(-360deg); }
-        }
-
-        /* Belső orbit – 4 dot */
         .orbit-gyuru.bels .orbit-dot:nth-child(1) { top: calc(50% - 18px); left: -18px; }
         .orbit-gyuru.bels .orbit-dot:nth-child(2) { top: -18px; left: calc(50% - 18px); }
         .orbit-gyuru.bels .orbit-dot:nth-child(3) { top: calc(50% - 18px); right: -18px; }
         .orbit-gyuru.bels .orbit-dot:nth-child(4) { bottom: -18px; left: calc(50% - 18px); }
-
-        /* Külső orbit – 5 dot */
         .orbit-gyuru.kulso .orbit-dot:nth-child(1) { top: calc(50% - 13px); left: -13px; }
         .orbit-gyuru.kulso .orbit-dot:nth-child(2) { top: 4%; left: 8%; }
         .orbit-gyuru.kulso .orbit-dot:nth-child(3) { top: 4%; right: 8%; }
         .orbit-gyuru.kulso .orbit-dot:nth-child(4) { bottom: 11%; left: 1%; }
         .orbit-gyuru.kulso .orbit-dot:nth-child(5) { bottom: 11%; right: 1%; }
 
-        /* Lélegző fény */
         @keyframes lelegzes {
             0%, 100% { box-shadow: 0 0 0 6px rgba(255,255,255,0.12), 0 0 30px rgba(38,168,224,0.25), 0 8px 30px rgba(0,0,0,0.25); }
             50%       { box-shadow: 0 0 0 9px rgba(255,255,255,0.22), 0 0 55px rgba(38,168,224,0.5),  0 8px 30px rgba(0,0,0,0.25); }
         }
 
-        /* ======= SHIMMER SCAN ======= */
-        .profil-keret {
-            position: relative;
-            overflow: hidden;
-        }
+        /* ======= SHIMMER ======= */
         .profil-keret::after {
             content: '';
             position: absolute;
-            top: -100%;
-            left: -75%;
-            width: 50%;
-            height: 300%;
-            background: linear-gradient(
-                105deg,
-                transparent 30%,
-                rgba(255,255,255,0.18) 50%,
-                rgba(255,255,255,0.35) 55%,
-                rgba(255,255,255,0.18) 60%,
-                transparent 70%
-            );
+            top: -100%; left: -75%;
+            width: 50%; height: 300%;
+            background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.35) 55%, rgba(255,255,255,0.18) 60%, transparent 70%);
             animation: shimmer 4s ease-in-out infinite;
             pointer-events: none;
             z-index: 10;
         }
-        @keyframes shimmer {
-            0%   { left: -75%; top: -100%; }
-            100% { left: 150%; top: 100%; }
-        }
-
-        /* ======= GYROSCOPE TILT ======= */
-        .card {
-            transition: transform 0.1s ease-out;
-            transform-style: preserve-3d;
-            will-change: transform;
-        }
+        @keyframes shimmer { 0% { left: -75%; top: -100%; } 100% { left: 150%; top: 100%; } }
     </style>
 </head>
 <body id="top">
-<main class="card">
+<main class="card" id="mainCard">
 
-    <!-- PROFIL -->
     <section class="profil-szekció">
         <div class="profil-wrapper">
-            <!-- Pulzáló gyűrűk -->
             <div class="ping-gyuru"></div>
             <div class="ping-gyuru"></div>
             <div class="ping-gyuru"></div>
 
-            <!-- Belső orbit – 4 ikon -->
             <div class="orbit-gyuru bels">
-                <div class="orbit-dot nagy">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M1.5 8.5a17 17 0 0 1 21 0M5 12a13 13 0 0 1 14 0M8.5 15.5a8 8 0 0 1 7 0M12 19h.01"/></svg>
-                </div>
-                <div class="orbit-dot nagy">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg>
-                </div>
-                <div class="orbit-dot nagy">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                </div>
-                <div class="orbit-dot nagy">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-                </div>
+                <div class="orbit-dot nagy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M1.5 8.5a17 17 0 0 1 21 0M5 12a13 13 0 0 1 14 0M8.5 15.5a8 8 0 0 1 7 0M12 19h.01"/></svg></div>
+                <div class="orbit-dot nagy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg></div>
+                <div class="orbit-dot nagy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+                <div class="orbit-dot nagy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
             </div>
 
-            <!-- Külső orbit – 5 kisebb ikon, ellentétes irány -->
             <div class="orbit-gyuru kulso">
-                <div class="orbit-dot kicsi">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-                </div>
-                <div class="orbit-dot kicsi">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                </div>
-                <div class="orbit-dot kicsi">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                </div>
-                <div class="orbit-dot kicsi">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                </div>
-                <div class="orbit-dot kicsi">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                </div>
+                <div class="orbit-dot kicsi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+                <div class="orbit-dot kicsi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+                <div class="orbit-dot kicsi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></div>
+                <div class="orbit-dot kicsi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <div class="orbit-dot kicsi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
             </div>
 
-            <div class="flip-container" id="flipContainer" style="perspective:800px">
-                <div class="flip-belso">
+            <div class="flip-container" id="flipContainer">
+                <div class="flip-belso" id="flipBelso">
                     <div class="flip-elol">
                         <div class="profil-keret" id="profilKeret"></div>
                     </div>
                     <div class="flip-hatul">
-                        <img class="flip-hatul-kep" id="sozGif" src="" data-src="so.gif" alt="Ne felejts el sózni">
+                        <img class="flip-hatul-kep" src="Designer.png" alt="Ne felejts el sózni">
                         <div class="flip-hatul-szoveg">Ne felejts el sózni! 🧂</div>
                     </div>
                 </div>
@@ -671,25 +515,16 @@
         </div>
         <h1 class="nev" id="nevEl"></h1>
         <p class="beosztas" id="beosztasEl"></p>
-
-        <!-- NÉVJEGY MENTÉS -->
         <a id="mentesGomb" href="#" class="mentes-gomb ripple-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm3-10H5V5h10v4z"/>
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm3-10H5V5h10v4z"/></svg>
             Névjegy mentése
         </a>
     </section>
 
     <div class="elvalaszto"></div>
-
-    <!-- FŐ KAPCSOLAT GOMBOK -->
     <div class="fo-gombok" id="foGombok"></div>
-
-    <!-- KÖZÖSSÉGI MÉDIA -->
     <div class="kozossegi-gombok" id="kozossegi" style="margin-top:16px"></div>
 
-    <!-- VISSZA TETEJÉRE -->
     <a class="top-gomb ripple-wrap" href="#top" id="topGomb">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
             <path d="M30,57.75A27.75,27.75,0,1,1,57.74,30,27.77,27.77,0,0,1,30,57.75Zm0-53A25.25,25.25,0,1,0,55.24,30,25.27,25.27,0,0,0,30,4.75Z"/>
@@ -698,7 +533,6 @@
     </a>
 </main>
 
-<!-- MODAL -->
 <div id="modal" class="modal">
     <div class="modal-belso">
         <span class="modal-zar" id="modalZar">
@@ -711,19 +545,14 @@
 </div>
 
 <script>
-// --- Profilkép fallback: monogram avatar ---
 function fallbackAvatar() {
     const parts = CARD.nev.trim().split(' ');
-    const initials = parts.length >= 2
-        ? parts[0][0] + parts[parts.length - 1][0]
-        : parts[0].substring(0, 2);
+    const initials = parts.length >= 2 ? parts[0][0] + parts[parts.length - 1][0] : parts[0].substring(0, 2);
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 130" width="130" height="130">
-        <defs>
-            <linearGradient id="avatarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:rgba(255,255,255,0.35)"/>
-                <stop offset="100%" style="stop-color:rgba(255,255,255,0.1)"/>
-            </linearGradient>
-        </defs>
+        <defs><linearGradient id="avatarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:rgba(255,255,255,0.35)"/>
+            <stop offset="100%" style="stop-color:rgba(255,255,255,0.1)"/>
+        </linearGradient></defs>
         <circle cx="65" cy="65" r="65" fill="url(#avatarGrad)"/>
         <text x="65" y="65" dominant-baseline="central" text-anchor="middle"
             font-family="Saira Condensed, sans-serif" font-weight="700"
@@ -731,7 +560,6 @@ function fallbackAvatar() {
     </svg>`;
 }
 
-// --- SVG ikonok ---
 const SVG = {
     telefon:  `<path d="M50,99A49,49,0,0,1,1,50,49,49,0,0,1,50,1h0A48.63,48.63,0,0,1,84.64,15.35h0a49,49,0,0,1,0,69.29A48.64,48.64,0,0,1,50,99ZM50,4h0A46,46,0,0,0,17.48,82.53,45.69,45.69,0,0,0,50,96h0A46,46,0,0,0,82.52,17.47h0A45.69,45.69,0,0,0,50,4Z"/><path d="M74.44,68.67h0L72,71.05a12.66,12.66,0,0,1-11.95,3.42A41.88,41.88,0,0,1,47.85,69a56.85,56.85,0,0,1-9.65-7.77A57.4,57.4,0,0,1,31,52.48a45,45,0,0,1-5.42-11,12.7,12.7,0,0,1,3.17-12.94l2.82-2.81a2,2,0,0,1,2.84,0h0l8.9,8.89a2,2,0,0,1,0,2.85h0l-5.23,5.23a4.26,4.26,0,0,0-.44,5.54,62.06,62.06,0,0,0,6.25,7.3,61.26,61.26,0,0,0,8.24,6.92A4.3,4.3,0,0,0,57.62,62l5.05-5.13a2,2,0,0,1,2.84,0h0l8.91,8.93A2,2,0,0,1,74.44,68.67Z"/>`,
     sms:      `<path d="M36.68,67a10.94,10.94,0,0,1-4.19-1.19,10.56,10.56,0,0,1-5.92-9.61c-.06-5,0-10,0-15a10.93,10.93,0,0,1,9.12-11A8.16,8.16,0,0,1,37.25,30H63.1a10.85,10.85,0,0,1,10.42,8.76,12.7,12.7,0,0,1,.21,2.3c0,5,0,9.92,0,14.89A10.86,10.86,0,0,1,65.05,66.8a12,12,0,0,1-2.39.25c-4.75,0-9.5,0-14.25,0a1,1,0,0,0-.81.34c-3.13,3.15-6.27,6.28-9.4,9.43a.88.88,0,0,1-1,.33.84.84,0,0,1-.52-.91c0-2.9,0-5.8,0-8.7ZM38.82,51.9a3.37,3.37,0,1,0-3.39-3.36A3.4,3.4,0,0,0,38.82,51.9Zm11.35,0a3.37,3.37,0,1,0-3.42-3.33A3.41,3.41,0,0,0,50.17,51.9Zm11.29,0a3.37,3.37,0,1,0-3.39-3.36A3.41,3.41,0,0,0,61.46,51.9Z"/><path d="M50,99A49,49,0,0,1,1,50,49,49,0,0,1,50,1h0A48.63,48.63,0,0,1,84.64,15.35h0a49,49,0,0,1,0,69.29A48.64,48.64,0,0,1,50,99ZM50,4h0A46,46,0,0,0,17.48,82.53,45.69,45.69,0,0,0,50,96h0A46,46,0,0,0,82.52,17.47h0A45.69,45.69,0,0,0,50,4Z"/>`,
@@ -749,12 +577,10 @@ const SVG = {
     iskola:   `<circle cx="36" cy="36" r="35" fill="none" stroke="currentColor" stroke-width="2"/><text x="36" y="46" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="28" fill="white">GH</text>`,
 };
 
-// --- Adatok betöltése ---
 document.title = CARD.nev;
 document.getElementById('nevEl').textContent = CARD.nev;
 document.getElementById('beosztasEl').textContent = CARD.beosztas;
 
-// Profilkép
 const pk = document.getElementById('profilKeret');
 if (CARD.profilkep) {
     pk.innerHTML = `<img class="profil-kep" src="${CARD.profilkep}" onerror="this.parentElement.innerHTML=fallbackAvatar()" alt="${CARD.nev}">`;
@@ -762,18 +588,14 @@ if (CARD.profilkep) {
     pk.innerHTML = fallbackAvatar();
 }
 
-// VCF gomb
 const mg = document.getElementById('mentesGomb');
 if (CARD.vcfFajl) {
     mg.href = CARD.vcfFajl;
-    mg.addEventListener('click', () => {
-        document.getElementById('modal').style.display = 'flex';
-    });
+    mg.addEventListener('click', () => { document.getElementById('modal').style.display = 'flex'; });
 } else {
     mg.style.display = 'none';
 }
 
-// --- Főgombok ---
 const foGombAdatok = [
     { ha: CARD.telefon,  href: `tel:${CARD.telefon}`,            label: 'Hívás',    icon: SVG.telefon,  vb: '0 0 100 100' },
     { ha: CARD.sms,      href: `sms:${CARD.sms}`,                label: 'SMS',      icon: SVG.sms,      vb: '0 0 100 100' },
@@ -785,24 +607,16 @@ const foEl = document.getElementById('foGombok');
 foGombAdatok.filter(g => g.ha).forEach(g => {
     const a = document.createElement('a');
     a.className = 'fo-gomb ripple-wrap';
-    a.href = g.href;
-    a.target = '_blank';
-    a.rel = 'noopener';
+    a.href = g.href; a.target = '_blank'; a.rel = 'noopener';
     a.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${g.vb}">${g.icon}</svg><span>${g.label}</span>`;
     foEl.appendChild(a);
 });
-
-// Ha 2 vagy 4 gomb van, ne maradjon félsorban — 2 oszlop
 const foSzam = foEl.children.length;
 if (foSzam === 2) foEl.style.gridTemplateColumns = 'repeat(2,1fr)';
 else if (foSzam === 4) foEl.style.gridTemplateColumns = 'repeat(2,1fr)';
-else if (foSzam === 5) {
-    foEl.style.gridTemplateColumns = 'repeat(3,1fr)';
-    foEl.children[4].style.gridColumn = '2';
-}
+else if (foSzam === 5) { foEl.style.gridTemplateColumns = 'repeat(3,1fr)'; foEl.children[4].style.gridColumn = '2'; }
 else if (foSzam <= 3) foEl.style.gridTemplateColumns = `repeat(${foSzam},1fr)`;
 
-// --- Közösségi média ---
 const kozAdatok = [
     { ha: CARD.facebook,  href: CARD.facebook,  label: 'Facebook',  icon: SVG.facebook,  vb: '0 0 72 72' },
     { ha: CARD.instagram, href: CARD.instagram, label: 'Instagram', icon: SVG.instagram, vb: '0 0 62 62' },
@@ -810,66 +624,52 @@ const kozAdatok = [
     { ha: CARD.tiktok,    href: CARD.tiktok,    label: 'TikTok',    icon: SVG.tiktok,    vb: '0 0 62 62' },
     { ha: CARD.youtube,   href: CARD.youtube,   label: 'YouTube',   icon: SVG.youtube,   vb: '0 0 72 72' },
     { ha: CARD.github,    href: CARD.github,    label: 'GitHub',    icon: SVG.github,    vb: '0 0 72 72' },
-    { ha: CARD.iskola,   href: CARD.iskola,    label: 'Iskolám',   icon: SVG.iskola,    vb: '0 0 72 72' },
-    { ha: CARD.twitter,  href: CARD.twitter,   label: 'Twitter',   icon: SVG.twitter,   vb: '0 0 72 72' },
+    { ha: CARD.iskola,    href: CARD.iskola,    label: 'Iskolám',   icon: SVG.iskola,    vb: '0 0 72 72' },
+    { ha: CARD.twitter,   href: CARD.twitter,   label: 'Twitter',   icon: SVG.twitter,   vb: '0 0 72 72' },
     { ha: CARD.website,   href: CARD.website,   label: 'Weboldal',  icon: SVG.website,   vb: '0 0 62 62' },
 ];
 const kozEl = document.getElementById('kozossegi');
 kozAdatok.filter(g => g.ha).forEach(g => {
     const a = document.createElement('a');
     a.className = 'koz-gomb ripple-wrap';
-    a.href = g.href;
-    a.target = '_blank';
-    a.rel = 'noopener';
+    a.href = g.href; a.target = '_blank'; a.rel = 'noopener';
     a.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${g.vb}">${g.icon}</svg><span>${g.label}</span>`;
     kozEl.appendChild(a);
 });
 
-// --- Profil flip ---
+// ======= PROFIL FLIP =======
 var flipEl = document.getElementById('flipContainer');
-var flipBelso = flipEl.querySelector('.flip-belso');
+var flipBelso = document.getElementById('flipBelso');
 var flipped = false;
+var touchMoved = false;
 
 function doFlip() {
     flipped = !flipped;
     flipBelso.style.transform = flipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
-}
-
-var sozGif = document.getElementById('sozGif');
-
-function doFlip() {
-    flipped = !flipped;
-    flipBelso.style.transform = flipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
-    // GIF csak megforduláskor töltődik be és indul el
-    if (flipped) {
-        sozGif.src = sozGif.dataset.src;
-    } else {
-        // visszaforduláskor reset: újra üres, hogy visszafordulva ne fusson
-        setTimeout(function() { sozGif.src = ''; }, 400);
-    }
 }
 
 flipEl.addEventListener('click', function(e) {
     e.stopPropagation();
-    doFlip();
+    if (!touchMoved) doFlip();
 });
-
 flipEl.addEventListener('touchstart', function(e) {
+    touchMoved = false;
     e.stopPropagation();
 }, { passive: true });
-
+flipEl.addEventListener('touchmove', function() {
+    touchMoved = true;
+}, { passive: true });
 flipEl.addEventListener('touchend', function(e) {
-    e.preventDefault();
     e.stopPropagation();
-    doFlip();
+    if (!touchMoved) { e.preventDefault(); doFlip(); }
 });
 
-// --- Modal ---
+// Modal
 const modal = document.getElementById('modal');
 document.getElementById('modalZar').addEventListener('click', () => modal.style.display = 'none');
 window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
 
-// --- Ripple effect ---
+// Ripple
 document.querySelectorAll('.ripple-wrap').forEach(el => {
     el.addEventListener('pointerdown', function(e) {
         const r = document.createElement('span');
@@ -882,7 +682,7 @@ document.querySelectorAll('.ripple-wrap').forEach(el => {
     });
 });
 
-// --- Touch hover ---
+// Touch hover
 document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEach(el => {
     el.addEventListener('touchstart', () => el.classList.add('touch'), { passive: true });
     el.addEventListener('touchend',   () => setTimeout(() => el.classList.remove('touch'), 300), { passive: true });
@@ -890,9 +690,8 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
 
 // ======= GYROSCOPE TILT =======
 (function() {
-    const card = document.querySelector('.card');
+    const card = document.getElementById('mainCard');
     const MAX = 8;
-
     if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', function(e) {
             if (e.gamma === null) return;
@@ -901,9 +700,8 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
             card.style.transform = `perspective(800px) rotateX(${-x}deg) rotateY(${y}deg)`;
         }, true);
     }
-
     window.addEventListener('mousemove', function(e) {
-        if (e.target === flipEl || flipEl.contains(e.target)) return;
+        if (flipEl.contains(e.target)) return;
         const cx = window.innerWidth  / 2;
         const cy = window.innerHeight / 2;
         const x = ((e.clientY - cy) / cy) * MAX;
@@ -911,7 +709,7 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
         card.style.transform = `perspective(800px) rotateX(${-x}deg) rotateY(${y}deg)`;
     });
     window.addEventListener('mouseleave', function() {
-        card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
+        card.style.transform = 'none';
     });
 })();
 </script>
