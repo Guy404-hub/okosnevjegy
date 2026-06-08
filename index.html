@@ -55,7 +55,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1000px;
+            perspective: 1000px; /* Szükséges a 3D dőlési hatáshoz */
             overflow-x: hidden;
         }
         a { text-decoration: none; -webkit-tap-highlight-color: transparent; color: inherit; }
@@ -72,6 +72,9 @@
             padding-bottom: 30px;
             position: relative;
             overflow: hidden;
+            transform-style: preserve-3d; /* Biztosítja, hogy a belső elemek is 3D-ben reagáljanak */
+            will-change: transform;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* Lágy visszaállás, amikor elhagyja az egér */
         }
 
         /* ======= PROFIL SZEKCIÓ ======= */
@@ -93,9 +96,6 @@
             margin-bottom: 16px;
             width: 360px;
             height: 360px;
-            transform-style: preserve-3d;
-            will-change: transform;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Sima visszaállás */
         }
 
         /* ======= FLIP KÁRTYA 3D ======= */
@@ -239,6 +239,7 @@
         }
         .mentes-gomb svg { width: 20px; height: 20px; stroke: #0d6a96; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s; flex-shrink: 0; }
         
+        /* MENTÉS GOMB HOVER EFFECT */
         @media (hover: hover) {
             .mentes-gomb:hover {
                 animation-play-state: paused;
@@ -296,6 +297,7 @@
         }
         .fo-gomb svg { width: 28px; height: 28px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s; }
         
+        /* FŐ GOMBOK HOVER KEZELÉSE */
         @media (hover: hover) {
             .fo-gomb:hover {
                 animation-play-state: paused;
@@ -350,6 +352,7 @@
         }
         .koz-gomb svg { width: 22px; height: 22px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         
+        /* KÖZÖSSÉGI GOMBOK HOVER KEZELÉSE */
         @media (hover: hover) {
             .koz-gomb:hover {
                 animation-play-state: paused;
@@ -490,7 +493,7 @@
 <main class="card" id="mainCard">
 
     <section class="profil-szekció">
-        <div class="profil-wrapper" id="profilWrapper">
+        <div class="profil-wrapper">
             <div class="ping-gyuru"></div>
             <div class="ping-gyuru"></div>
             <div class="ping-gyuru"></div>
@@ -679,41 +682,36 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
     el.addEventListener('touchend', () => { el.classList.remove('touch'); }, {passive: true});
 });
 
-/* ======= FRISSÍTETT: INTERAKTÍV PROFIL KÖVETÉS (PARALLAXIS) ======= */
-const cardContainer = document.getElementById('mainCard');
-const profilWrapper = document.getElementById('profilWrapper');
+/* ======= ÚJ: EGÉRKÖVETŐ 3D PARALLAXIS ======= */
+const cardElement = document.getElementById('mainCard');
 
+// Csak asztali gépeken fusson, ahol van hover lehetőség (egér)
 if (window.matchMedia("(hover: hover)").matches) {
-    cardContainer.addEventListener('mousemove', (e) => {
-        const rect = profilWrapper.getBoundingClientRect();
+    cardElement.addEventListener('mousemove', (e) => {
+        const cardRect = cardElement.getBoundingClientRect();
         
-        // A profil-wrapper középpontja a képernyőhöz képest
-        const wrapperX = rect.left + rect.width / 2;
-        const wrapperY = rect.top + rect.height / 2;
+        // Egér pozíciója a kártyán belül (százalékosan a középponthoz képest)
+        const x = e.clientX - cardRect.left;
+        const y = e.clientY - cardRect.top;
         
-        // Egér távolsága a középponttól
-        const deltaX = e.clientX - wrapperX;
-        const deltaY = e.clientY - wrapperY;
+        const midX = cardRect.width / 2;
+        const midY = cardRect.height / 2;
         
-        // Maximum dőlési és eltolási értékek fokban és pixelben
-        const maxTilt = 12; // dőlésszög fokban
-        const maxMove = 10; // eltolás pixelben
+        // Maximális dőlésszög (fokban mérve, a 6-8 fok az ideális, ami nem túl agresszív)
+        const maxRotate = 8; 
         
-        // Normalizálás a képernyő méretéhez képest, hogy finom legyen
-        const tiltX = (deltaY / window.innerHeight) * -maxTilt;
-        const tiltY = (deltaX / window.innerWidth) * maxTilt;
-        const moveX = (deltaX / window.innerWidth) * maxMove;
-        const moveY = (deltaY / window.innerHeight) * maxMove;
+        const rotateX = ((midY - y) / midY) * maxRotate;
+        const rotateY = ((x - midX) / midX) * maxRotate;
         
-        // Mozgás közbeni azonnali reakció
-        profilWrapper.style.transition = 'transform 0.08s ease-out';
-        profilWrapper.style.transform = `translateX(${moveX}px) translateY(${moveY}px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+        // Mozgás közben kivesszük a transition-t a teljesen azonnali reakcióért
+        cardElement.style.transition = 'transform 0.1s ease-out';
+        cardElement.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     });
 
-    // Ha az egér elhagyja a kártya területét, lágyan visszaáll középre
-    cardContainer.addEventListener('mouseleave', () => {
-        profilWrapper.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
-        profilWrapper.style.transform = 'translateX(0px) translateY(0px) rotateX(0deg) rotateY(0deg)';
+    // Ha az egér elhagyja a kártyát, lágyan visszaáll a helyére
+    cardElement.addEventListener('mouseleave', () => {
+        cardElement.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+        cardElement.style.transform = 'rotateX(0deg) rotateY(0deg)';
     });
 }
 </script>
