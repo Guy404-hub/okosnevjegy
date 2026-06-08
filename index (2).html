@@ -29,7 +29,7 @@
         tiktok:     "",
         youtube:    "",
         github:     "https://github.com/Guy404-hub",
-        Iskolám:    "https://www.viraghgedeon.hu/",
+        iskola:     "https://www.viraghgedeon.hu/",
         twitter:    "",
         website:    "",
 
@@ -635,6 +635,7 @@ const SVG = {
     youtube:  `<path d="M36,1A35,35,0,1,0,71,36,35,35,0,0,0,36,1ZM55.42,36.16c0,4.77-.59,9.54-2.16,11a6.26,6.26,0,0,1-4.42,2.08C44.16,49.56,36,49.64,36,49.64s-10.09-.1-13.2-.42a7,7,0,0,1-4.73-2.08c-1.57-1.49-2.16-6.26-2.16-11v-2.6c0-4.77.59-9.54,2.16-11a6.63,6.63,0,0,1,4.42-2.08C26,20.14,36,20.06,36,20.06s10.16.08,13.14.4A6.63,6.63,0,0,1,53.56,22.5C55.13,24,55.42,28.79,55.42,33.56ZM31.55,29.14V43L43,36Z"/>`,
     twitter:  `<path d="M36,1A35,35,0,1,0,71,36,35,35,0,0,0,36,1ZM52,24.84l-7.65,8.71L53.31,47.16H44.78L39.57,39.5,33.07,47.16H27.6l8.18-9.32L27,24.84h8.72l4.8,7.19,6.05-7.19Z"/>`,
     website:  `<path d="M52.21,9.78A30,30,0,1,0,61,31,30,30,0,0,0,52.21,9.78ZM29.49,11.69v7.21a36.77,36.77,0,0,1-5.35.57C25.56,15.17,27.49,12.84,29.49,11.69Zm0,11.22V29.51H21a36.86,36.86,0,0,1,1.13-8.3A42.12,42.12,0,0,0,29.49,22.91Zm0,10.62V41.13A40.87,40.87,0,0,0,22.16,41a35.92,35.92,0,0,1-1.13-7.46ZM29.49,43.15v6.21c-2-.81-3.93-3.14-5.35-6.64A36.92,36.92,0,0,1,29.49,43.15Zm3,7.21V43.15a36.92,36.92,0,0,0,5.35.57C36.44,47.22,34.51,49.55,32.51,50.36Zm0-9.23V33.53H40a36.94,36.94,0,0,1-1.13,7.6A40.87,40.87,0,0,0,32.51,41.13Zm0-10.62V22.91a42.12,42.12,0,0,0,6.33.69A36.86,36.86,0,0,1,40,29.51Zm0-8.62V11.69c2,.81,3.93,3.14,5.35,6.64a40,40,0,0,1-5.35.57ZM41.76,41.51a39.48,39.48,0,0,0,1.29-8.87h7.52A19.48,19.48,0,0,1,46.36,43.25,27.18,27.18,0,0,0,41.76,41.51Zm1.29-11.88a39.39,39.39,0,0,0-1.29-9H46.36a19.45,19.45,0,0,1,4.21,9.09H43.05Z"/>`,
+    iskola:   `<circle cx="36" cy="36" r="35" fill="none" stroke="currentColor" stroke-width="2"/><text x="36" y="46" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="28" fill="white">GH</text>`,
 };
 
 // --- Adatok betöltése ---
@@ -698,7 +699,8 @@ const kozAdatok = [
     { ha: CARD.tiktok,    href: CARD.tiktok,    label: 'TikTok',    icon: SVG.tiktok,    vb: '0 0 62 62' },
     { ha: CARD.youtube,   href: CARD.youtube,   label: 'YouTube',   icon: SVG.youtube,   vb: '0 0 72 72' },
     { ha: CARD.github,    href: CARD.github,    label: 'GitHub',    icon: SVG.github,    vb: '0 0 72 72' },
-    { ha: CARD.twitter,   href: CARD.twitter,   label: 'Twitter',   icon: SVG.twitter,   vb: '0 0 72 72' },
+    { ha: CARD.iskola,   href: CARD.iskola,    label: 'Iskolám',   icon: SVG.iskola,    vb: '0 0 72 72' },
+    { ha: CARD.twitter,  href: CARD.twitter,   label: 'Twitter',   icon: SVG.twitter,   vb: '0 0 72 72' },
     { ha: CARD.website,   href: CARD.website,   label: 'Weboldal',  icon: SVG.website,   vb: '0 0 62 62' },
 ];
 const kozEl = document.getElementById('kozossegi');
