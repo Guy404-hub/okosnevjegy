@@ -42,17 +42,21 @@
             --fo: #26a8e0;
             --fo-sotet: #1a8fc4;
             --fo-vilagos: #59c4f1;
+            --bg-h: 200;
+            --bg-s: 75%;
+            --bg-l: 25%;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Saira Condensed', sans-serif;
             font-weight: 500;
-            background: #0d5f82;
+            background: hsl(var(--bg-h), var(--bg-s), var(--bg-l));
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background 0.3s ease;
         }
         a { text-decoration: none; -webkit-tap-highlight-color: transparent; color: inherit; }
 
@@ -67,7 +71,7 @@
             padding-bottom: 30px;
             position: relative;
             overflow: hidden;
-            transition: transform 0.1s ease-out;
+            transition: transform 0.1s ease-out, background 0.4s ease;
         }
         .card::before {
             content: '';
@@ -106,7 +110,6 @@
             margin-bottom: 16px;
         }
 
-        /* ======= FLIP — teljesen önálló 3D kontextus ======= */
         .flip-scene {
             width: 250px;
             height: 250px;
@@ -174,6 +177,8 @@
             border-radius: 50%;
             pointer-events: none;
         }
+
+        /* ===== TYPING EFFECT ===== */
         .nev {
             font-size: 1.8em;
             font-weight: 800;
@@ -181,7 +186,22 @@
             letter-spacing: 0.5px;
             text-align: center;
             text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            min-height: 1.2em;
         }
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: rgba(255,255,255,0.85);
+            margin-left: 2px;
+            vertical-align: middle;
+            animation: cursor-blink 0.7s step-end infinite;
+        }
+        @keyframes cursor-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
         .beosztas {
             font-size: 0.95em;
             font-weight: 600;
@@ -190,6 +210,7 @@
             margin-top: 4px;
             max-width: 280px;
             line-height: 1.3;
+            min-height: 1.3em;
         }
 
         @keyframes mentes-pulzal {
@@ -219,15 +240,16 @@
             transition: transform 0.15s, box-shadow 0.15s;
             animation: fadeUp 0.6s ease 0.4s both, mentes-pulzal 2.5s ease-in-out 1s infinite, mentes-shimmer 3s linear 1s infinite, lebeg 3s ease-in-out 0.2s infinite;
         }
-        .mentes-gomb svg { width: 20px; fill: #0d6a96; transition: transform 0.3s; flex-shrink: 0; }
+        .mentes-gomb svg { width: 20px; fill: #0d6a96; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); flex-shrink: 0; }
         .mentes-gomb:active, .mentes-gomb.touch { animation: none; transform: scale(0.95); box-shadow: 0 2px 10px rgba(0,0,0,0.2); background: #e8f4fc; }
         @media (hover: hover) {
             .mentes-gomb:hover { animation-play-state: paused; box-shadow: 0 8px 28px rgba(0,0,0,0.28); }
-            .mentes-gomb:hover svg { transform: rotate(-10deg) scale(1.15); }
+            .mentes-gomb:hover svg { transform: rotate(-20deg) scale(1.25) translateY(-3px); }
         }
 
         .elvalaszto { width: 85%; height: 1px; background: rgba(255,255,255,0.2); margin: 20px 0 4px; }
 
+        /* ===== FŐ GOMBOK — ikon animáció ===== */
         .fo-gombok {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -250,18 +272,33 @@
             backdrop-filter: blur(4px);
             animation: lebeg 3s ease-in-out infinite;
         }
-        .fo-gomb svg { width: 36px; fill: white; transition: transform 0.3s; }
+        .fo-gomb svg { width: 36px; fill: white; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
         .fo-gomb:nth-child(1) { animation-delay: 0s; }
         .fo-gomb:nth-child(2) { animation-delay: 0.4s; }
         .fo-gomb:nth-child(3) { animation-delay: 0.8s; }
         .fo-gomb:nth-child(4) { animation-delay: 1.2s; }
         .fo-gomb:nth-child(5) { animation-delay: 1.6s; }
-        .fo-gomb:active, .fo-gomb.touch { animation: none; background: rgba(255,255,255,0.28); transform: scale(0.94); }
+        .fo-gomb:active, .fo-gomb.touch {
+            animation: none;
+            background: rgba(255,255,255,0.28);
+            transform: scale(0.94);
+        }
+        .fo-gomb:active svg, .fo-gomb.touch svg {
+            transform: rotate(360deg) scale(1.2);
+        }
         @media (hover: hover) {
-            .fo-gomb:hover { animation: none; background: rgba(255,255,255,0.22); transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
-            .fo-gomb:hover svg { transform: scale(1.12); }
+            .fo-gomb:hover {
+                animation: none;
+                background: rgba(255,255,255,0.22);
+                transform: translateY(-4px);
+                box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            }
+            .fo-gomb:hover svg {
+                transform: rotate(20deg) scale(1.18) translateY(-4px);
+            }
         }
 
+        /* ===== KÖZÖSSÉGI GOMBOK — ikon animáció ===== */
         .kozossegi-gombok {
             display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;
             gap: 8px; width: 90%; margin-top: 10px;
@@ -285,17 +322,30 @@
         .koz-gomb:nth-child(3) { animation-delay: 1.2s; }
         .koz-gomb:nth-child(4) { animation-delay: 1.7s; }
         .koz-gomb:nth-child(5) { animation-delay: 0.5s; }
-        .koz-gomb svg { width: 28px; fill: white; transition: transform 0.3s; }
-        .koz-gomb:active, .koz-gomb.touch { animation: none; background: rgba(255,255,255,0.25); transform: scale(0.93); }
+        .koz-gomb svg { width: 28px; fill: white; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+        .koz-gomb:active, .koz-gomb.touch {
+            animation: none;
+            background: rgba(255,255,255,0.25);
+            transform: scale(0.93);
+        }
+        .koz-gomb:active svg, .koz-gomb.touch svg {
+            transform: rotate(-15deg) scale(1.25) translateY(-5px);
+        }
         @media (hover: hover) {
-            .koz-gomb:hover { animation: none; background: rgba(255,255,255,0.2); transform: translateY(-3px); }
-            .koz-gomb:hover svg { transform: scale(1.15) rotate(-5deg); }
+            .koz-gomb:hover {
+                animation: none;
+                background: rgba(255,255,255,0.2);
+                transform: translateY(-3px);
+            }
+            .koz-gomb:hover svg {
+                transform: rotate(-15deg) scale(1.25) translateY(-4px);
+            }
         }
 
         .top-gomb { margin-top: 28px; display: flex; align-items: center; justify-content: center; animation: fadeUp 0.6s ease 0.8s both; }
-        .top-gomb svg { width: 34px; fill: rgba(255,255,255,0.4); transition: fill 0.2s, transform 0.2s; }
-        .top-gomb:active svg, .top-gomb.touch svg { fill: white; transform: translateY(-3px); }
-        @media (hover: hover) { .top-gomb:hover svg { fill: white; transform: translateY(-3px); } }
+        .top-gomb svg { width: 34px; fill: rgba(255,255,255,0.4); transition: fill 0.2s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+        .top-gomb:active svg, .top-gomb.touch svg { fill: white; transform: translateY(-6px) scale(1.1); }
+        @media (hover: hover) { .top-gomb:hover svg { fill: white; transform: translateY(-6px) scale(1.1); } }
 
         .modal {
             display: none; position: fixed; z-index: 999; inset: 0;
@@ -409,7 +459,6 @@
                 <div class="orbit-dot kicsi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
             </div>
 
-            <!-- FLIP SCENE: önálló perspective kontextus, nem függ a .card transform-tól -->
             <div class="flip-scene" id="flipScene">
                 <div class="flip-belso" id="flipBelso">
                     <div class="flip-elol">
@@ -423,7 +472,7 @@
             </div>
         </div>
 
-        <h1 class="nev" id="nevEl"></h1>
+        <h1 class="nev" id="nevEl"><span id="nevSzoveg"></span><span class="typing-cursor" id="typingCursor"></span></h1>
         <p class="beosztas" id="beosztasEl"></p>
         <a id="mentesGomb" href="#" class="mentes-gomb ripple-wrap">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm3-10H5V5h10v4z"/></svg>
@@ -488,8 +537,41 @@ const SVG = {
 };
 
 document.title = CARD.nev;
-document.getElementById('nevEl').textContent = CARD.nev;
-document.getElementById('beosztasEl').textContent = CARD.beosztas;
+
+// ===== TYPING EFFECT =====
+(function() {
+    const nevSzoveg = document.getElementById('nevSzoveg');
+    const cursor = document.getElementById('typingCursor');
+    const beosztasEl = document.getElementById('beosztasEl');
+    const teljesNev = CARD.nev;
+    const teljesBeosztas = CARD.beosztas;
+    let i = 0;
+
+    function typeNev() {
+        if (i <= teljesNev.length) {
+            nevSzoveg.textContent = teljesNev.slice(0, i);
+            i++;
+            const delay = i === 1 ? 400 : 55 + Math.random() * 35;
+            setTimeout(typeNev, delay);
+        } else {
+            setTimeout(() => {
+                cursor.style.display = 'none';
+                typeBeosztas();
+            }, 500);
+        }
+    }
+
+    let j = 0;
+    function typeBeosztas() {
+        if (j <= teljesBeosztas.length) {
+            beosztasEl.textContent = teljesBeosztas.slice(0, j);
+            j++;
+            setTimeout(typeBeosztas, 30 + Math.random() * 25);
+        }
+    }
+
+    setTimeout(typeNev, 600);
+})();
 
 const pk = document.getElementById('profilKeret');
 if (CARD.profilkep) {
@@ -598,28 +680,50 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
     el.addEventListener('touchend',   () => setTimeout(() => el.classList.remove('touch'), 300), { passive: true });
 });
 
-// ======= GYROSCOPE + EGÉR TILT =======
+// ======= GYROSCOPE + EGÉR TILT + HÁTTÉR SZÍN =======
 (function() {
     const card = document.getElementById('mainCard');
     const MAX = 8;
+    const baseH = 200, baseS = 75, baseL = 25;
+
+    function applyTilt(x, y) {
+        card.style.transform = `perspective(800px) rotateX(${-x}deg) rotateY(${y}deg)`;
+    }
+
+    function applyBgColor(nx, ny) {
+        // nx, ny in range [-1, 1]
+        const hShift = nx * 20;
+        const lShift = ny * 8;
+        const newH = Math.round(baseH + hShift);
+        const newL = Math.clamp ? Math.clamp(baseL + lShift, 15, 40) : Math.max(15, Math.min(40, baseL + lShift));
+        document.body.style.background = `hsl(${newH}, ${baseS}%, ${newL}%)`;
+    }
+
     if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', function(e) {
             if (e.gamma === null) return;
             const x = Math.max(-MAX, Math.min(MAX, e.beta  * 0.15));
             const y = Math.max(-MAX, Math.min(MAX, e.gamma * 0.15));
-            card.style.transform = `perspective(800px) rotateX(${-x}deg) rotateY(${y}deg)`;
+            applyTilt(x, y);
+            applyBgColor(e.gamma / 45, e.beta / 45);
         }, true);
     }
+
     window.addEventListener('mousemove', function(e) {
         if (flipScene.contains(e.target)) return;
         const cx = window.innerWidth  / 2;
         const cy = window.innerHeight / 2;
-        const x = ((e.clientY - cy) / cy) * MAX;
-        const y = ((e.clientX - cx) / cx) * MAX;
-        card.style.transform = `perspective(800px) rotateX(${-x}deg) rotateY(${y}deg)`;
+        const nx = (e.clientX - cx) / cx;
+        const ny = (e.clientY - cy) / cy;
+        const x = ny * MAX;
+        const y = nx * MAX;
+        applyTilt(x, y);
+        applyBgColor(nx, ny);
     });
+
     window.addEventListener('mouseleave', function() {
         card.style.transform = 'none';
+        document.body.style.background = `hsl(${baseH}, ${baseS}%, ${baseL}%)`;
     });
 })();
 </script>
