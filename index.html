@@ -31,7 +31,7 @@
         cegEmail:    "",
         cegWebsite:  "",
         cegFacebook: "",
-        cegInstagram:"",
+        cegInstagram:",
         foSzin:      "#26a8e0",
     };
     </script>
@@ -55,12 +55,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1000px;
+            perspective: 1000px; /* Biztosítja a 3D teret a kártyának */
             overflow-x: hidden;
         }
         a { text-decoration: none; -webkit-tap-highlight-color: transparent; color: inherit; }
 
-        /* ======= KÁRTYA ======= */
+        /* ======= KÁRTYA (3D dőléssel) ======= */
         .card {
             width: 100%;
             max-width: 420px;
@@ -72,6 +72,9 @@
             padding-bottom: 30px;
             position: relative;
             overflow: hidden;
+            transform-style: preserve-3d;
+            will-change: transform;
+            transition: transform 0.1s ease-out; /* Finom, reszponzív követés */
         }
 
         /* ======= PROFIL SZEKCIÓ ======= */
@@ -83,6 +86,7 @@
             padding-top: 50px;
             padding-bottom: 24px;
             animation: fadeDown 0.8s cubic-bezier(0.25, 1, 0.5, 1) both;
+            transform-style: preserve-3d;
         }
 
         .profil-wrapper {
@@ -94,8 +98,6 @@
             width: 360px;
             height: 360px;
             transform-style: preserve-3d;
-            will-change: transform;
-            transition: transform 0.1s ease-out; /* Folyamatos, reszponzív mozgás */
         }
 
         /* ======= FLIP KÁRTYA 3D ======= */
@@ -271,6 +273,7 @@
             gap: 10px;
             width: 90%;
             margin-top: 16px;
+            transform-style: preserve-3d;
         }
         .fo-gomb {
             position: relative;     
@@ -325,6 +328,7 @@
             gap: 8px;
             width: 90%;
             margin-top: 10px;
+            transform-style: preserve-3d;
         }
         .koz-gomb {
             position: relative;     
@@ -679,35 +683,30 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
     el.addEventListener('touchend', () => { el.classList.remove('touch'); }, {passive: true});
 });
 
-/* ======= FRISSÍTETT: GLOBÁLIS KÉPERNYŐSZINTŰ EGÉRKÖVETŐ ======= */
-const profilWrapper = document.getElementById('profilWrapper');
+/* ======= GLOBÁLIS 3D EGÉRKÖVETŐ A TELJES KÁRTYÁRA ======= */
+const mainCard = document.getElementById('mainCard');
 
 if (window.matchMedia("(hover: hover)").matches) {
     window.addEventListener('mousemove', (e) => {
-        const rect = profilWrapper.getBoundingClientRect();
+        const rect = mainCard.getBoundingClientRect();
         
-        // A profil-wrapper pontos középpontja a képernyőn
-        const wrapperX = rect.left + rect.width / 2;
-        const wrapperY = rect.top + rect.height / 2;
+        // A kártya geometriai középpontja a képernyőn
+        const cardX = rect.left + rect.width / 2;
+        const cardY = rect.top + rect.height / 2;
         
         // Egér távolsága a kártya közepétől
-        const deltaX = e.clientX - wrapperX;
-        const deltaY = e.clientY - wrapperY;
+        const deltaX = e.clientX - cardX;
+        const deltaY = e.clientY - cardY;
         
-        // Maximális dőlésszög fokban, és eltolás pixelben
-        const maxTilt = 15; 
-        const maxMove = 12; 
+        // Maximális dőlésszög fokban (ízlés szerint állítható finomabbra/durvábbra)
+        const maxTilt = 12; 
         
-        // Normalizáljuk a távolságot az ablak méretéhez képest
+        // Normalizáljuk a távolságot a teljes böngészőablak méretéhez képest
         const tiltX = (deltaY / window.innerHeight) * -maxTilt;
         const tiltY = (deltaX / window.innerWidth) * maxTilt;
-        const moveX = (deltaX / window.innerWidth) * maxMove;
-        const moveY = (deltaY / window.innerHeight) * maxMove;
         
-        // Azonnali, sima reakció az egérre bárhol az ablakban
-        profilWrapper.style.transform = `translateX(${moveX}px) translateY(${moveY}px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)__`;
-        // Javított string interpoláció a biztonság kedvéért:
-        profilWrapper.style.transform = `translateX(${moveX}px) translateY(${moveY}px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+        // A teljes okosnévjegy elfordul a térben az egér irányába
+        mainCard.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
     });
 }
 </script>
