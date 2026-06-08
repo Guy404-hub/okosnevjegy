@@ -825,21 +825,29 @@ kozAdatok.filter(g => g.ha).forEach(g => {
 });
 
 // --- Profil flip ---
-(function() {
-    var fc = document.getElementById('flipContainer');
-    var flipped = false;
-    fc.addEventListener('click', function(e) {
-        e.stopPropagation();
-        flipped = !flipped;
-        fc.querySelector('.flip-belso').style.transform = flipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
-    });
-    fc.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        flipped = !flipped;
-        fc.querySelector('.flip-belso').style.transform = flipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
-    });
-})();
+var flipEl = document.getElementById('flipContainer');
+var flipBelso = flipEl.querySelector('.flip-belso');
+var flipped = false;
+
+function doFlip() {
+    flipped = !flipped;
+    flipBelso.style.transform = flipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+}
+
+flipEl.addEventListener('click', function(e) {
+    e.stopPropagation();
+    doFlip();
+});
+
+flipEl.addEventListener('touchstart', function(e) {
+    e.stopPropagation();
+}, { passive: true });
+
+flipEl.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    doFlip();
+});
 
 // --- Modal ---
 const modal = document.getElementById('modal');
@@ -868,9 +876,8 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
 // ======= GYROSCOPE TILT =======
 (function() {
     const card = document.querySelector('.card');
-    const MAX = 8; // max fokos dőlés
+    const MAX = 8;
 
-    // Mobilon: gyroscope
     if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', function(e) {
             if (e.gamma === null) return;
@@ -880,8 +887,8 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
         }, true);
     }
 
-    // Asztali: egér követés
     window.addEventListener('mousemove', function(e) {
+        if (e.target === flipEl || flipEl.contains(e.target)) return;
         const cx = window.innerWidth  / 2;
         const cy = window.innerHeight / 2;
         const x = ((e.clientY - cy) / cy) * MAX;
