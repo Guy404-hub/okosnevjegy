@@ -212,22 +212,6 @@
             line-height: 1.3;
             min-height: 1.3em;
         }
-        .udvozles {
-            font-size: 0.85em;
-            font-weight: 600;
-            color: rgba(255,255,255,0.55);
-            text-align: center;
-            margin-top: 8px;
-            letter-spacing: 0.3px;
-            animation: fadeUp 0.6s ease 2.5s both;
-        }
-        .udvozles span {
-            display: inline-block;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.18);
-            border-radius: 50px;
-            padding: 3px 14px;
-        }
 
         @keyframes mentes-pulzal {
             0%, 100% { box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 0 0 0 rgba(255,255,255,0.5); }
@@ -586,7 +570,6 @@
 
         <h1 class="nev" id="nevEl"><span id="nevSzoveg"></span><span class="typing-cursor" id="typingCursor"></span></h1>
         <p class="beosztas" id="beosztasEl"></p>
-        <p class="udvozles" id="udvozlesEl"></p>
         <a id="mentesGomb" href="#" class="mentes-gomb ripple-wrap">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm3-10H5V5h10v4z"/></svg>
             Névjegy mentése
@@ -686,25 +669,7 @@ document.title = CARD.nev;
     setTimeout(typeNev, 600);
 })();
 
-// ===== NAPSZAK-ALAPÚ ÜDVÖZLÉS =====
-(function() {
-    const ora = new Date().getHours();
-    let szoveg, emoji;
-    if (ora >= 5 && ora < 10) {
-        szoveg = 'Jó reggelt!'; emoji = '🌅';
-    } else if (ora >= 10 && ora < 12) {
-        szoveg = 'Jó délelőttöt!'; emoji = '☀️';
-    } else if (ora >= 12 && ora < 18) {
-        szoveg = 'Jó napot!'; emoji = '🌤️';
-    } else if (ora >= 18 && ora < 22) {
-        szoveg = 'Jó estét!'; emoji = '🌆';
-    } else {
-        szoveg = 'Jó éjszakát!'; emoji = '🌙';
-    }
-    const el = document.getElementById('udvozlesEl');
-    el.innerHTML = `<span>${emoji} ${szoveg}</span>`;
-})();
-
+const pk = document.getElementById('profilKeret');
 if (CARD.profilkep) {
     pk.innerHTML = `<img class="profil-kep" src="${CARD.profilkep}" onerror="this.parentElement.innerHTML=fallbackAvatar()" alt="${CARD.nev}">`;
 } else {
@@ -938,7 +903,7 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
 
     window.addEventListener('mouseleave', function() {
         card.style.transform = 'none';
-        if (document.body.classList.contains('ejszaka'))  {
+        if (document.body.classList.contains('ejszaka')) {
             document.body.style.background = 'hsl(220, 40%, 8%)';
         } else {
             document.body.style.background = `hsl(${baseH}, ${baseS}%, ${baseL}%)`;
