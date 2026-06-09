@@ -864,12 +864,19 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
     }
 
     function applyBgColor(nx, ny) {
-        if (document.body.classList.contains('ejszaka')) return;
-        const hShift = nx * 20;
-        const lShift = ny * 8;
-        const newH = Math.round(baseH + hShift);
-        const newL = Math.max(15, Math.min(40, baseL + lShift));
-        document.body.style.background = `hsl(${newH}, ${baseS}%, ${newL}%)`;
+        if (document.body.classList.contains('ejszaka')) {
+            const hShift = nx * 15;
+            const lShift = ny * 4;
+            const newH = Math.round(220 + hShift);
+            const newL = Math.max(5, Math.min(18, 8 + lShift));
+            document.body.style.background = `hsl(${newH}, 40%, ${newL}%)`;
+        } else {
+            const hShift = nx * 20;
+            const lShift = ny * 8;
+            const newH = Math.round(baseH + hShift);
+            const newL = Math.max(15, Math.min(40, baseL + lShift));
+            document.body.style.background = `hsl(${newH}, ${baseS}%, ${newL}%)`;
+        }
     }
 
     if (window.DeviceOrientationEvent) {
@@ -896,7 +903,9 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
 
     window.addEventListener('mouseleave', function() {
         card.style.transform = 'none';
-        if (!document.body.classList.contains('ejszaka')) {
+        if (document.body.classList.contains('ejszaka')) {
+            document.body.style.background = 'hsl(220, 40%, 8%)';
+        } else {
             document.body.style.background = `hsl(${baseH}, ${baseS}%, ${baseL}%)`;
         }
     });
