@@ -920,115 +920,212 @@ document.querySelectorAll('.fo-gomb, .koz-gomb, .mentes-gomb, .top-gomb').forEac
 (function() {
     const CEL = 'WOW';
     let buffer = '';
+    let aktiv = false;
 
-    // CSS a shake animációhoz és konfettihez
     const style = document.createElement('style');
     style.textContent = `
-        @keyframes wow-shake {
+        @keyframes wow-shake-1 {
             0%,100% { transform: translateX(0) rotate(0deg); }
-            10% { transform: translateX(-12px) rotate(-2deg); }
-            20% { transform: translateX(12px) rotate(2deg); }
-            30% { transform: translateX(-10px) rotate(-1.5deg); }
-            40% { transform: translateX(10px) rotate(1.5deg); }
-            50% { transform: translateX(-8px) rotate(-1deg); }
-            60% { transform: translateX(8px) rotate(1deg); }
-            70% { transform: translateX(-5px) rotate(-0.5deg); }
-            80% { transform: translateX(5px) rotate(0.5deg); }
-            90% { transform: translateX(-2px); }
+            10% { transform: translateX(-18px) rotate(-3deg); }
+            20% { transform: translateX(18px) rotate(3deg); }
+            30% { transform: translateX(-15px) rotate(-2.5deg); }
+            40% { transform: translateX(15px) rotate(2.5deg); }
+            50% { transform: translateX(-10px) rotate(-1.5deg); }
+            60% { transform: translateX(10px) rotate(1.5deg); }
+            70% { transform: translateX(-6px) rotate(-0.8deg); }
+            80% { transform: translateX(6px) rotate(0.8deg); }
+            90% { transform: translateX(-3px); }
         }
-        .wow-shake { animation: wow-shake 0.7s ease both !important; }
+        @keyframes wow-shake-2 {
+            0%,100% { transform: translateX(0) translateY(0) rotate(0deg); }
+            10% { transform: translateX(16px) translateY(-8px) rotate(2deg); }
+            25% { transform: translateX(-14px) translateY(6px) rotate(-2deg); }
+            40% { transform: translateX(12px) translateY(-5px) rotate(1.5deg); }
+            55% { transform: translateX(-10px) translateY(4px) rotate(-1deg); }
+            70% { transform: translateX(7px) translateY(-3px) rotate(0.5deg); }
+            85% { transform: translateX(-4px) translateY(2px); }
+        }
+        @keyframes wow-shake-3 {
+            0%,100% { transform: scale(1) rotate(0deg); }
+            15% { transform: scale(1.04) rotate(-2deg) translateX(-10px); }
+            30% { transform: scale(0.97) rotate(2deg) translateX(10px); }
+            45% { transform: scale(1.03) rotate(-1.5deg) translateX(-8px); }
+            60% { transform: scale(0.98) rotate(1deg) translateX(8px); }
+            75% { transform: scale(1.01) rotate(-0.5deg) translateX(-4px); }
+            90% { transform: scale(1) rotate(0.3deg) translateX(3px); }
+        }
+        .wow-shake-1 { animation: wow-shake-1 0.6s ease both !important; }
+        .wow-shake-2 { animation: wow-shake-2 0.6s ease both !important; }
+        .wow-shake-3 { animation: wow-shake-3 0.6s ease both !important; }
+
+        @keyframes wow-megjelenik {
+            0%   { transform: translate(-50%, -50%) scale(0) rotate(-15deg); opacity: 0; }
+            60%  { transform: translate(-50%, -50%) scale(1.15) rotate(3deg); opacity: 1; }
+            80%  { transform: translate(-50%, -50%) scale(0.95) rotate(-1deg); }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes wow-pulzal {
+            0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.4), 0 8px 40px rgba(0,0,0,0.5); }
+            50%     { box-shadow: 0 0 0 16px rgba(255,255,255,0), 0 8px 40px rgba(0,0,0,0.5); }
+        }
+        @keyframes wow-szivarvany {
+            0%   { filter: hue-rotate(0deg) brightness(1); }
+            25%  { filter: hue-rotate(90deg) brightness(1.2); }
+            50%  { filter: hue-rotate(180deg) brightness(1); }
+            75%  { filter: hue-rotate(270deg) brightness(1.2); }
+            100% { filter: hue-rotate(360deg) brightness(1); }
+        }
+        @keyframes wow-eltunik {
+            0%   { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0) rotate(20deg); opacity: 0; }
+        }
 
         .wow-uzenet {
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            background: rgba(10,40,60,0.92);
+            background: linear-gradient(135deg, rgba(10,40,60,0.95), rgba(20,60,90,0.95));
             color: white;
             font-family: 'Saira Condensed', sans-serif;
-            font-size: 2.2em;
+            font-size: 2.8em;
             font-weight: 900;
-            padding: 18px 40px;
-            border-radius: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
+            padding: 22px 50px;
+            border-radius: 24px;
+            border: 2px solid rgba(255,255,255,0.4);
             z-index: 9998;
             pointer-events: none;
-            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s;
             text-align: center;
-            letter-spacing: 2px;
+            letter-spacing: 4px;
+            opacity: 0;
+            backdrop-filter: blur(10px);
         }
         .wow-uzenet.lathato {
-            transform: translate(-50%, -50%) scale(1);
+            animation: wow-megjelenik 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards,
+                       wow-pulzal 1s ease-in-out 0.6s infinite,
+                       wow-szivarvany 1.5s linear 0.6s infinite;
         }
         .wow-uzenet.eltunik {
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0.8);
+            animation: wow-eltunik 0.4s ease forwards !important;
         }
 
         .konfetti-darab {
             position: fixed;
-            width: 10px; height: 10px;
-            border-radius: 2px;
             pointer-events: none;
             z-index: 9997;
             animation: konfetti-esik linear forwards;
         }
         @keyframes konfetti-esik {
-            0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
-            80%  { opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+            0%   { opacity: 1; }
+            85%  { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .wow-flash {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 9996;
+            pointer-events: none;
+            animation: wow-flash-anim 0.35s ease forwards;
+        }
+        @keyframes wow-flash-anim {
+            0%   { opacity: 0.45; }
+            100% { opacity: 0; }
         }
     `;
     document.head.appendChild(style);
 
-    // Üzenet elem
     const uzenet = document.createElement('div');
     uzenet.className = 'wow-uzenet';
-    uzenet.textContent = '🎉 WOW! 🎉';
+    uzenet.innerHTML = '🎉 WOW! 🎉';
     document.body.appendChild(uzenet);
 
-    function konfettiSzoras() {
-        const szinek = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff6bdf','#fff','#ffaa5c'];
-        for (let i = 0; i < 120; i++) {
+    function konfettiSzoras(db, delayMax) {
+        const szinek = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff6bdf','#ffffff','#ffaa5c','#c77dff','#00f5d4'];
+        for (let i = 0; i < db; i++) {
             setTimeout(() => {
                 const d = document.createElement('div');
                 d.className = 'konfetti-darab';
+                const meret = 6 + Math.random() * 12;
+                const forma = Math.random();
+                const dur = 2 + Math.random() * 3;
+                const xDrift = (Math.random() - 0.5) * 300;
+                const rot = Math.random() * 1080 * (Math.random() > 0.5 ? 1 : -1);
                 d.style.cssText = `
                     left: ${Math.random() * 100}vw;
-                    top: -10px;
+                    top: -${10 + Math.random() * 20}px;
+                    width: ${meret}px;
+                    height: ${forma > 0.66 ? meret : meret * 0.4}px;
                     background: ${szinek[Math.floor(Math.random() * szinek.length)]};
-                    width: ${6 + Math.random() * 10}px;
-                    height: ${6 + Math.random() * 10}px;
-                    border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
-                    animation-duration: ${1.5 + Math.random() * 2.5}s;
-                    animation-delay: 0s;
+                    border-radius: ${forma > 0.33 ? '50%' : '2px'};
+                    animation-duration: ${dur}s;
                 `;
+                // egyedi mozgás JS-sel
+                d.animate([
+                    { transform: `translateY(0px) translateX(0px) rotate(0deg)`, opacity: 1 },
+                    { transform: `translateY(30vh) translateX(${xDrift * 0.3}px) rotate(${rot * 0.3}deg)`, opacity: 1, offset: 0.3 },
+                    { transform: `translateY(70vh) translateX(${xDrift * 0.7}px) rotate(${rot * 0.7}deg)`, opacity: 1, offset: 0.7 },
+                    { transform: `translateY(110vh) translateX(${xDrift}px) rotate(${rot}deg)`, opacity: 0 },
+                ], { duration: dur * 1000, easing: 'linear', fill: 'forwards' });
                 document.body.appendChild(d);
-                setTimeout(() => d.remove(), 4000);
-            }, Math.random() * 600);
+                setTimeout(() => d.remove(), dur * 1000 + 100);
+            }, Math.random() * delayMax);
         }
     }
 
-    function wowAktival() {
+    function villanas() {
+        const f = document.createElement('div');
+        f.className = 'wow-flash';
+        document.body.appendChild(f);
+        setTimeout(() => f.remove(), 400);
+    }
+
+    function shake(card, cls, ms) {
+        return new Promise(res => {
+            card.classList.remove('wow-shake-1','wow-shake-2','wow-shake-3');
+            void card.offsetWidth;
+            card.classList.add(cls);
+            setTimeout(() => { card.classList.remove(cls); res(); }, ms);
+        });
+    }
+
+    async function wowAktival() {
+        if (aktiv) return;
+        aktiv = true;
         const card = document.getElementById('mainCard');
 
-        // Shake
-        card.classList.remove('wow-shake');
-        void card.offsetWidth; // reflow hogy újrainduljon
-        card.classList.add('wow-shake');
-        setTimeout(() => card.classList.remove('wow-shake'), 700);
+        // 1. villanás + első rázás
+        villanas();
+        konfettiSzoras(80, 400);
+        await shake(card, 'wow-shake-1', 600);
 
-        // Üzenet megjelenik
+        // üzenet megjelenik
         uzenet.classList.remove('eltunik');
+        void uzenet.offsetWidth;
         uzenet.classList.add('lathato');
 
-        // Konfetti
-        konfettiSzoras();
+        // 2. rázás 400ms után
+        setTimeout(async () => {
+            konfettiSzoras(80, 300);
+            await shake(card, 'wow-shake-2', 600);
+        }, 400);
 
-        // Eltűnik 3mp után
+        // 3. rázás 900ms után
+        setTimeout(async () => {
+            konfettiSzoras(80, 300);
+            await shake(card, 'wow-shake-3', 600);
+        }, 900);
+
+        // eltűnik 3.5mp után
         setTimeout(() => {
+            uzenet.classList.remove('lathato');
             uzenet.classList.add('eltunik');
-            setTimeout(() => uzenet.classList.remove('lathato', 'eltunik'), 400);
-        }, 3000);
+            setTimeout(() => {
+                uzenet.classList.remove('eltunik');
+                uzenet.style.animation = '';
+                aktiv = false;
+            }, 450);
+        }, 3500);
     }
 
     document.addEventListener('keydown', function(e) {
